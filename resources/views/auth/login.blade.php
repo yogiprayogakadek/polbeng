@@ -13,7 +13,7 @@
     <!-- Core Css -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" />
 
-    <title>Login | E-Presensi Desa Penatahan</title>
+    <title>Login | Politeknik Negeri Bengkalis</title>
 </head>
 
 <body>

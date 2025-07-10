@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('study_programs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('department_id')->references('id')->on('departments')->onDelete('cascade');
-            $table->string('study_program');
             $table->char('study_program_code', 10);
+            $table->string('study_program_name');
             $table->boolean('is_active')->default(true);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

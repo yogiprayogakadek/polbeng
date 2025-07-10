@@ -13,7 +13,7 @@
         href="https://bootstrapdemos.adminmart.com/matdash/dist/assets/css/plugins/atom-one-dark.min.css"> --}}
 
     @stack('css')
-    <title>E-Presensi Desa Penatahan - @yield('page-title')</title>
+    <title>Politeknik Negeri Bengkalis - @yield('page-title')</title>
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 

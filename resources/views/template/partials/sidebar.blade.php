@@ -6,8 +6,7 @@
         <div>
             <div class="mini-nav">
                 <div class="brand-logo d-flex align-items-center justify-content-center">
-                    <a class="nav-link {{ auth()->user()->role == 'admin' ? 'sidebartoggler' : '' }}" id="headerCollapse"
-                        href="javascript:void(0)">
+                    <a class="nav-link sidebartoggler" id="headerCollapse" href="javascript:void(0)">
                         <iconify-icon icon="solar:hamburger-menu-line-duotone" class="fs-7"></iconify-icon>
                     </a>
                 </div>
@@ -31,20 +30,26 @@
 
                     <li class="mini-nav-item" id="mini-1">
                         <a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip"
-                            data-bs-placement="right" data-bs-title="Face Encoding">
+                            data-bs-placement="right" data-bs-title="Department">
                             <iconify-icon icon="solar:face-scan-square-bold" class="fs-7"></iconify-icon>
                         </a>
                     </li>
 
                     <li class="mini-nav-item" id="mini-2">
                         <a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip"
-                            data-bs-placement="right" data-bs-title="Pegawai">
+                            data-bs-placement="right" data-bs-title="Study Program">
                             <iconify-icon icon="solar:user-hands-outline" class="fs-7"></iconify-icon>
                         </a>
                     </li>
                     <li class="mini-nav-item" id="mini-3">
                         <a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip"
-                            data-bs-placement="right" data-bs-title="Aturan Kehadiran">
+                            data-bs-placement="right" data-bs-title="Project Category">
+                            <iconify-icon icon="solar:settings-linear" class="fs-7"></iconify-icon>
+                        </a>
+                    </li>
+                    <li class="mini-nav-item" id="mini-4">
+                        <a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip"
+                            data-bs-placement="right" data-bs-title="Project">
                             <iconify-icon icon="solar:settings-linear" class="fs-7"></iconify-icon>
                         </a>
                     </li>
@@ -61,116 +66,163 @@
                 </div>
 
                 <!-- ---------------------------------- -->
-                <!-- Face Encoding -->
+                <!-- Department -->
                 <!-- ---------------------------------- -->
                 <nav class="sidebar-nav" id="menu-right-mini-1" data-simplebar>
                     <ul class="sidebar-menu" id="sidebarnav">
                         <!-- ---------------------------------- -->
-                        <!-- Face Encoding -->
+                        <!-- Department -->
                         <!-- ---------------------------------- -->
                         <li class="nav-small-cap">
-                            <span class="hide-menu">Face Encoding</span>
+                            <span class="hide-menu">Department</span>
                         </li>
                         <!-- ---------------------------------- -->
-                        <!-- Face Encoding -->
+                        <!-- Department -->
                         <!-- ---------------------------------- -->
                         {{-- @can('access-admin-menu') --}}
                         <li class="sidebar-item">
-                            <a class="sidebar-link" id="list-face" href="{{ route('dashboard.admin') }}"
+                            <a class="sidebar-link" id="department" href="{{ route('department.index') }}"
                                 aria-expanded="false">
                                 <iconify-icon icon="solar:face-scan-square-broken"></iconify-icon>
-                                <span class="hide-menu">List Face Encoding</span>
+                                <span class="hide-menu">Department List</span>
                             </a>
                         </li>
                         {{-- @endcan --}}
 
                         <li class="sidebar-item">
-                            <a class="sidebar-link" id="create-face" href="{{ route('dashboard.admin') }}"
-                                aria-expanded="false">
-                                <iconify-icon icon="solar:add-circle-bold"></iconify-icon>
-                                <span class="hide-menu">Tambah/Update</span>
+                            <a class="sidebar-link" href="{{ route('department.create') }}" aria-expanded="false">
+                                <iconify-icon icon="solar:user-plus-broken"></iconify-icon>
+                                <span class="hide-menu">Create Department</span>
                             </a>
                         </li>
 
-                        {{-- <li class="sidebar-item">
-                                                <a class="sidebar-link" href="{{ route('face.showRestore') }}" aria-expanded="false">
-                                                    <iconify-icon icon="solar:refresh-bold-duotone"></iconify-icon>
-                                                    <span class="hide-menu">Restore Face Encoding</span>
-                                                </a>
-                                            </li> --}}
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{ route('department.showRestore') }}" aria-expanded="false">
+                                <iconify-icon icon="solar:refresh-bold-duotone"></iconify-icon>
+                                <span class="hide-menu">Recovery</span>
+                            </a>
+                        </li>
                     </ul>
                 </nav>
 
                 <!-- ---------------------------------- -->
-                <!-- Pegawai -->
+                <!-- Study Program -->
                 <!-- ---------------------------------- -->
                 <nav class="sidebar-nav" id="menu-right-mini-2" data-simplebar>
                     <ul class="sidebar-menu" id="sidebarnav">
                         <!-- ---------------------------------- -->
-                        <!-- Pegawai -->
+                        <!-- Study Program -->
                         <!-- ---------------------------------- -->
                         <li class="nav-small-cap">
-                            <span class="hide-menu">Pegawai</span>
+                            <span class="hide-menu">Study Program</span>
                         </li>
                         <!-- ---------------------------------- -->
-                        <!-- Pegawai -->
+                        <!-- Study Program -->
                         <!-- ---------------------------------- -->
+                        {{-- @can('access-admin-menu') --}}
                         <li class="sidebar-item">
-                            <a class="sidebar-link" id="list-pegawai" href="{{ route('dashboard.admin') }}"
+                            <a class="sidebar-link" id="studi_program" href="{{ route('studyProgram.index') }}"
                                 aria-expanded="false">
-                                <iconify-icon icon="solar:user-id-linear"></iconify-icon>
-                                <span class="hide-menu">List Pegawai</span>
+                                <iconify-icon icon="solar:face-scan-square-broken"></iconify-icon>
+                                <span class="hide-menu">Study Program List</span>
                             </a>
                         </li>
+                        {{-- @endcan --}}
 
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ route('dashboard.admin') }}" aria-expanded="false">
+                            <a class="sidebar-link" href="{{ route('studyProgram.create') }}" aria-expanded="false">
                                 <iconify-icon icon="solar:user-plus-broken"></iconify-icon>
-                                <span class="hide-menu">Tambah Pegawai</span>
+                                <span class="hide-menu">Create Study Program</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ route('dashboard.admin') }}" aria-expanded="false">
+                            <a class="sidebar-link" href="{{ route('studyProgram.showRestore') }}"
+                                aria-expanded="false">
                                 <iconify-icon icon="solar:refresh-bold-duotone"></iconify-icon>
-                                <span class="hide-menu">Restore Pegawai</span>
+                                <span class="hide-menu">Recovery</span>
                             </a>
                         </li>
                     </ul>
                 </nav>
+
                 <!-- ---------------------------------- -->
-                <!-- Rules -->
+                <!-- Project Category -->
                 <!-- ---------------------------------- -->
                 <nav class="sidebar-nav" id="menu-right-mini-3" data-simplebar>
                     <ul class="sidebar-menu" id="sidebarnav">
                         <!-- ---------------------------------- -->
-                        <!-- Rules -->
+                        <!-- Project Category -->
                         <!-- ---------------------------------- -->
                         <li class="nav-small-cap">
-                            <span class="hide-menu">Rules</span>
+                            <span class="hide-menu">Project Category</span>
                         </li>
                         <!-- ---------------------------------- -->
-                        <!-- Rules -->
+                        <!-- Project Category -->
                         <!-- ---------------------------------- -->
+                        {{-- @can('access-admin-menu') --}}
                         <li class="sidebar-item">
-                            <a class="sidebar-link" id="list-rule" href="{{ route('dashboard.admin') }}"
+                            <a class="sidebar-link" id="project_category" href="{{ route('projectCategory.index') }}"
                                 aria-expanded="false">
-                                <iconify-icon icon="solar:settings-bold"></iconify-icon>
-                                <span class="hide-menu">List Rule</span>
+                                <iconify-icon icon="solar:face-scan-square-broken"></iconify-icon>
+                                <span class="hide-menu">Project Category List</span>
+                            </a>
+                        </li>
+                        {{-- @endcan --}}
+
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{ route('projectCategory.create') }}"
+                                aria-expanded="false">
+                                <iconify-icon icon="solar:user-plus-broken"></iconify-icon>
+                                <span class="hide-menu">Create Project Category</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ route('dashboard.admin') }}" aria-expanded="false">
-                                <iconify-icon icon="solar:add-circle-bold"></iconify-icon>
-                                <span class="hide-menu">Tambah Rule</span>
-                            </a>
-                        </li>
-
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ route('dashboard.admin') }}" aria-expanded="false">
+                            <a class="sidebar-link" href="{{ route('projectCategory.showRestore') }}"
+                                aria-expanded="false">
                                 <iconify-icon icon="solar:refresh-bold-duotone"></iconify-icon>
-                                <span class="hide-menu">Restore Rule</span>
+                                <span class="hide-menu">Recovery</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <!-- ---------------------------------- -->
+                <!-- Project -->
+                <!-- ---------------------------------- -->
+                <nav class="sidebar-nav" id="menu-right-mini-4" data-simplebar>
+                    <ul class="sidebar-menu" id="sidebarnav">
+                        <!-- ---------------------------------- -->
+                        <!-- Project -->
+                        <!-- ---------------------------------- -->
+                        <li class="nav-small-cap">
+                            <span class="hide-menu">Project</span>
+                        </li>
+                        <!-- ---------------------------------- -->
+                        <!-- Project -->
+                        <!-- ---------------------------------- -->
+                        {{-- @can('access-admin-menu') --}}
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" id="project" href="{{ route('project.index') }}"
+                                aria-expanded="false">
+                                <iconify-icon icon="solar:face-scan-square-broken"></iconify-icon>
+                                <span class="hide-menu">Project List</span>
+                            </a>
+                        </li>
+                        {{-- @endcan --}}
+
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{ route('project.create') }}" aria-expanded="false">
+                                <iconify-icon icon="solar:user-plus-broken"></iconify-icon>
+                                <span class="hide-menu">Create Project</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{ route('project.showRestore') }}" aria-expanded="false">
+                                <iconify-icon icon="solar:refresh-bold-duotone"></iconify-icon>
+                                <span class="hide-menu">Recovery</span>
                             </a>
                         </li>
                     </ul>

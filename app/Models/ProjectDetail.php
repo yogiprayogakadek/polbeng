@@ -10,6 +10,16 @@ class ProjectDetail extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'uuid',
+        'project_id',
+        'members',
+        'description',
+        'video_trailer_url',
+        'presentation_video_url',
+        'poster_path'
+    ];
+
     protected static function boot()
     {
         parent::boot();

@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('category_project_id')->references('id')->on('project_categories')->onDelete('cascade');
-            $table->text('project_name');
-            $table->smallInteger('start_year')->comment('academic year');
-            $table->smallInteger('end_year')->comment('academic year');
+            $table->foreignId('project_category_id')->references('id')->on('project_categories')->onDelete('cascade');
+            $table->text('project_title');
+            $table->char('school_year', 9);
             $table->enum('semester', ['Ganjil', 'Genap']);
             $table->string('thumbnail', 100)->nullable();
             $table->boolean('is_active')->default(true);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

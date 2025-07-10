@@ -14,11 +14,12 @@ return new class extends Migration
         Schema::create('project_details', function (Blueprint $table) {
             $table->id();
             $table->string('uuid', 50);
+            $table->foreignId('project_id')->references('id')->on('projects')->onDelete('cascade');
             $table->json('members')->comment('nim & nama');
             $table->text('description');
             $table->string('video_trailer_url');
             $table->string('presentation_video_url');
-            $table->string('poster', 100);
+            $table->string('poster_path', 100);
             $table->timestamps();
         });
     }
