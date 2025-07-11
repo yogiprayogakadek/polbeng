@@ -42006,7 +42006,7 @@ h6 {
     border-top: 0;
 }
 .topbar-image {
-    background-image: url(../images/frontend-pages/topbar-bg.png);
+    background-image: url(https://bootstrapdemos.adminmart.com/matdash/dist/assets/images/frontend-pages/topbar-bg.png);
     background-size: cover;
     background-repeat: no-repeat;
 }
@@ -42136,5 +42136,5 @@ h6 {
 }
 
 .dz-progress {
-        display: none !important;
-    }
+    display: none !important;
+}

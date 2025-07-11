@@ -99,28 +99,30 @@
         </div>
 
         <h5 class="fw-semibold mb-3">Recent Projects</h5>
-        <table class="table" id="recentProjectsTable">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Project Title</th>
-                    <th>Category</th>
-                    <th>School Year</th>
-                    <th>Semester</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($recentProjects as $index => $project)
+        <div class="table-responsive">
+            <table class="table" id="recentProjectsTable">
+                <thead>
                     <tr>
-                        <td>{{ $index + 1 }}</td>
-                        <td>{{ $project->project_title }}</td>
-                        <td>{{ $project->projectCategory->project_category_name ?? '-' }}</td>
-                        <td>{{ $project->school_year }}</td>
-                        <td><span class="badge bg-primary">{{ $project->semester }}</span></td>
+                        <th>#</th>
+                        <th>Project Title</th>
+                        <th>Category</th>
+                        <th>School Year</th>
+                        <th>Semester</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach ($recentProjects as $index => $project)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $project->project_title }}</td>
+                            <td>{{ $project->projectCategory->project_category_name ?? '-' }}</td>
+                            <td>{{ $project->school_year }}</td>
+                            <td><span class="badge bg-primary">{{ $project->semester }}</span></td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 @endsection
 

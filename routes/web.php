@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Frontend\HomePageController;
+use App\Http\Controllers\Frontend\ProjectController as FrontendProjectController;
 use App\Http\Controllers\Main\AuthController;
 use App\Http\Controllers\Main\DashboardController;
 use App\Http\Controllers\Main\DepartmentController;
@@ -107,4 +109,18 @@ Route::middleware('auth')->group(function () {
                 Route::post('/store', 'storeGalleryPhotos')->name('galleries.store');
             });
         });
+});
+
+// FRONTEND
+Route::name('frontend.')->group(function () {
+    Route::controller(HomePageController::class)->group(function () {
+        Route::get('/', 'homepage')->name('homepage');
+        Route::get('/homepage/project-category/{departmentID}', 'projectCategory')->name('project.category');
+    });
+
+    Route::controller(FrontendProjectController::class)->group(function () {
+        Route::get('/project/{projectCategoryID}', 'index')->name('project.index');
+        Route::get('/projects/load-more', 'loadMore')->name('project.loadmore');
+        Route::get('/projects/search', 'search')->name('project.search');
+    });
 });
