@@ -21,7 +21,7 @@
 
 @if (session('loginSuccess'))
     <script>
-        toastr.info("{!! session('loginSuccess') !!}", "Login Berhasil", {
+        toastr.info("{!! session('loginSuccess') !!}", "Login Success", {
             closeButton: true,
         });
     </script>

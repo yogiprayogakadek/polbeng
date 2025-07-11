@@ -1,6 +1,6 @@
 @extends('template.master')
 
-@section('page-title', 'Study Program')
+@section('page-title', 'Project')
 
 @push('css')
     <link rel="stylesheet"
@@ -22,33 +22,42 @@
 
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title fw-semibold mb-4">Restore Study Program</h5>
+            <h5 class="card-title fw-semibold mb-4">Deleted Items Project</h5>
 
             <div class="table-responsive">
                 <table id="table" class="table table-striped table-bordered text-nowrap align-middle" width="100%">
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Study Program Code/Name</th>
-                            <th>Project Category Name</th>
+                            <th>Project Thumbnail</th>
+                            <th>Project Title</th>
+                            <th>Category Name</th>
+                            <th>School Year</th>
+                            <th>Semester</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($data as $data)
+                        @foreach ($data as $project)
                             <tr>
                                 <td>
                                     <button type="button" class="btn bg-info-subtle text-info btn-restore"
-                                        data-id="{{ $data->id }}" data-name="{{ $data->project_category_name }}"
-                                        data-url="{{ route('projectCategory.restore', $data->id) }}"
-                                        data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip"
-                                        data-bs-placement="top" data-bs-title="Restore">
+                                        data-id="{{ $project->id }}" data-name="{{ $project->project_title }}"
+                                        data-url="{{ route('project.restore', $project->id) }}" data-bs-toggle="tooltip"
+                                        data-bs-custom-class="custom-tooltip" data-bs-placement="top"
+                                        data-bs-title="Restore">
                                         <iconify-icon icon="solar:refresh-bold-duotone" width="1em"
                                             height="1em"></iconify-icon>
                                     </button>
                                 </td>
-                                <td>{{ $data->studyProgram->study_program_code . ' - ' . $data->studyProgram->study_program_name }}
+                                <td class="text-center">
+                                    <img src="{{ asset('storage/' . $project->thumbnail) }}" width="70"
+                                        class="img-thumbnail" />
                                 </td>
-                                <td>{{ $data->project_category_name }}</td>
+                                <td>{{ $project->project_title }}</td>
+                                <td>{{ $project->projectCategory->studyProgram->study_program_name . ' - ' . $project->projectCategory->project_category_name }}
+                                </td>
+                                <td>{{ $project->school_year }}</td>
+                                <td>{{ $project->semester }}</td>
                             </tr>
                         @endforeach
                     </tbody>

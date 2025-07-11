@@ -23,6 +23,10 @@ Route::middleware('auth')->group(function () {
     Route::controller(DashboardController::class)->group(function () {
         Route::prefix('admin')->group(function () {
             Route::get('/dashboard', 'index')->name('dashboard.admin');
+            Route::get('/dashboard/projects-per-year', 'getProjectsPerYear')->name('dashboard.projectsPerYear');
+            Route::get('/dashboard/projects-per-category', 'getProjectsPerCategory')->name('dashboard.projectsPerCategory');
+            Route::get('/dashboard/recent-projects', 'recentProjects')->name('dashboard.recentProjects');
+            Route::get('/dashboard/projects-trend', 'projectsTrend')->name('dashboard.projectsTrend');
         });
     });
 

@@ -55,7 +55,8 @@
                                         class="img-thumbnail" />
                                 </td>
                                 <td>{{ $project->project_title }}</td>
-                                <td>{{ $project->projectCategory->project_category_name }}</td>
+                                <td>{{ $project->projectCategory->studyProgram->study_program_name . ' - ' . $project->projectCategory->project_category_name }}
+                                </td>
                                 <td>{{ $project->school_year }}</td>
                                 <td>{{ $project->semester }}</td>
                                 <td class="text-center">
@@ -69,14 +70,6 @@
                                     </button>
                                 </td>
                                 <td class="text-center">
-                                    {{-- <button class="btn btn btn-outline-primary modal-btn"
-                                        data-url="{{ route('project.galleries', $project->id) }}"
-                                        data-modal-id="projectGalleriesModal" data-bs-toggle="tooltip"
-                                        data-bs-custom-class="custom-tooltip" data-bs-placement="top"
-                                        data-bs-title="Project Galleries">
-                                        <iconify-icon icon="solar:album-line-duotone" width="1em"
-                                            height="1em"></iconify-icon>
-                                    </button> --}}
                                     <button class="btn btn-outline-primary modal-btn"
                                         data-url="{{ route('project.galleries.modal', $project->detail->id) }}"
                                         data-modal-id="projectGalleriesModal" data-bs-toggle="tooltip"

@@ -142,6 +142,7 @@
                             <input type="file" id="thumbnail" name="thumbnail"
                                 class="form-control @error('thumbnail') is-invalid @enderror"
                                 placeholder="Enter thumbnail file" value="{{ old('thumbnail') }}">
+                            <span class="text-small text-muted">*Leave blank if you don't have thumbnail.</span>
                             @error('thumbnail')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -193,6 +194,7 @@
                             <label for="galleries" class="form-label">Galleries</label>
                             <div class="dropzone" id="galleryDropzone"></div>
                             <input type="file" name="galleries[]" id="realGalleriesInput" multiple hidden>
+                            <span class="text-small text-muted">*Leave blank if you don't have thumbnail.</span>
                             {{-- <div id="galleriesInputs"></div> --}}
                             @error('galleries')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -317,7 +319,7 @@
             init: function() {
                 this.on("addedfile", function(file) {
                     updateRealInput(this.files);
-                    toastr.success(`File "${file.name}" berhasil ditambahkan`, 'Upload Success', {
+                    toastr.success(`"${file.name}" file added successfully`, 'Upload Success', {
                         closeButton: true,
                         progressBar: true,
                         timeOut: 3000
@@ -327,7 +329,7 @@
                 this.on("removedfile", function(file) {
                     updateRealInput(this.files);
 
-                    toastr.success(`File "${file.name}" berhasil dihapus`, 'Remove Success', {
+                    toastr.success(`"${file.name}" file deleted successfully`, 'Remove Success', {
                         closeButton: true,
                         progressBar: true,
                         timeOut: 3000

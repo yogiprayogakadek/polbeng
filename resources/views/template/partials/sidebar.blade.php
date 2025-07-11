@@ -19,7 +19,7 @@
                     <li class="mini-nav-item single-menu" id="dashboard">
                         <a href="{{ route('dashboard.admin') }}" data-bs-toggle="tooltip"
                             data-bs-custom-class="custom-tooltip" data-bs-placement="right" data-bs-title="Dashboard">
-                            <iconify-icon icon="solar:tuning-square-2-line-duotone" class="fs-7"></iconify-icon>
+                            <iconify-icon icon="solar:home-line-duotone" class="fs-7"></iconify-icon>
                         </a>
                     </li>
 
@@ -31,26 +31,26 @@
                     <li class="mini-nav-item" id="mini-1">
                         <a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip"
                             data-bs-placement="right" data-bs-title="Department">
-                            <iconify-icon icon="solar:face-scan-square-bold" class="fs-7"></iconify-icon>
+                            <iconify-icon icon="solar:buildings-2-bold" class="fs-7"></iconify-icon>
                         </a>
                     </li>
 
                     <li class="mini-nav-item" id="mini-2">
                         <a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip"
                             data-bs-placement="right" data-bs-title="Study Program">
-                            <iconify-icon icon="solar:user-hands-outline" class="fs-7"></iconify-icon>
+                            <iconify-icon icon="ph:graduation-cap" class="fs-7"></iconify-icon>
                         </a>
                     </li>
                     <li class="mini-nav-item" id="mini-3">
                         <a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip"
                             data-bs-placement="right" data-bs-title="Project Category">
-                            <iconify-icon icon="solar:settings-linear" class="fs-7"></iconify-icon>
+                            <iconify-icon icon="solar:tag-bold" class="fs-7"></iconify-icon>
                         </a>
                     </li>
                     <li class="mini-nav-item" id="mini-4">
                         <a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip"
                             data-bs-placement="right" data-bs-title="Project">
-                            <iconify-icon icon="solar:settings-linear" class="fs-7"></iconify-icon>
+                            <iconify-icon icon="solar:folder-with-files-bold" class="fs-7"></iconify-icon>
                         </a>
                     </li>
 
@@ -83,7 +83,7 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link" id="department" href="{{ route('department.index') }}"
                                 aria-expanded="false">
-                                <iconify-icon icon="solar:face-scan-square-broken"></iconify-icon>
+                                <iconify-icon icon="solar:buildings-2-bold"></iconify-icon>
                                 <span class="hide-menu">Department List</span>
                             </a>
                         </li>
@@ -91,15 +91,15 @@
 
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('department.create') }}" aria-expanded="false">
-                                <iconify-icon icon="solar:user-plus-broken"></iconify-icon>
+                                <iconify-icon icon="solar:user-plus-bold-duotone"></iconify-icon>
                                 <span class="hide-menu">Create Department</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('department.showRestore') }}" aria-expanded="false">
-                                <iconify-icon icon="solar:refresh-bold-duotone"></iconify-icon>
-                                <span class="hide-menu">Recovery</span>
+                                <iconify-icon icon="solar:trash-bin-minimalistic-broken"></iconify-icon>
+                                <span class="hide-menu">Deleted Items</span>
                             </a>
                         </li>
                     </ul>
@@ -123,7 +123,7 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link" id="studi_program" href="{{ route('studyProgram.index') }}"
                                 aria-expanded="false">
-                                <iconify-icon icon="solar:face-scan-square-broken"></iconify-icon>
+                                <iconify-icon icon="ph:graduation-cap-duotone"></iconify-icon>
                                 <span class="hide-menu">Study Program List</span>
                             </a>
                         </li>
@@ -131,7 +131,7 @@
 
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('studyProgram.create') }}" aria-expanded="false">
-                                <iconify-icon icon="solar:user-plus-broken"></iconify-icon>
+                                <iconify-icon icon="solar:user-plus-bold-duotone"></iconify-icon>
                                 <span class="hide-menu">Create Study Program</span>
                             </a>
                         </li>
@@ -139,8 +139,8 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('studyProgram.showRestore') }}"
                                 aria-expanded="false">
-                                <iconify-icon icon="solar:refresh-bold-duotone"></iconify-icon>
-                                <span class="hide-menu">Recovery</span>
+                                <iconify-icon icon="solar:trash-bin-minimalistic-broken"></iconify-icon>
+                                <span class="hide-menu">Deleted Items</span>
                             </a>
                         </li>
                     </ul>
@@ -164,7 +164,7 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link" id="project_category" href="{{ route('projectCategory.index') }}"
                                 aria-expanded="false">
-                                <iconify-icon icon="solar:face-scan-square-broken"></iconify-icon>
+                                <iconify-icon icon="solar:tag-bold-duotone"></iconify-icon>
                                 <span class="hide-menu">Project Category List</span>
                             </a>
                         </li>
@@ -173,7 +173,7 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('projectCategory.create') }}"
                                 aria-expanded="false">
-                                <iconify-icon icon="solar:user-plus-broken"></iconify-icon>
+                                <iconify-icon icon="solar:user-plus-bold-duotone"></iconify-icon>
                                 <span class="hide-menu">Create Project Category</span>
                             </a>
                         </li>
@@ -181,8 +181,8 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('projectCategory.showRestore') }}"
                                 aria-expanded="false">
-                                <iconify-icon icon="solar:refresh-bold-duotone"></iconify-icon>
-                                <span class="hide-menu">Recovery</span>
+                                <iconify-icon icon="solar:trash-bin-minimalistic-broken"></iconify-icon>
+                                <span class="hide-menu">Deleted Items</span>
                             </a>
                         </li>
                     </ul>
@@ -206,7 +206,7 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link" id="project" href="{{ route('project.index') }}"
                                 aria-expanded="false">
-                                <iconify-icon icon="solar:face-scan-square-broken"></iconify-icon>
+                                <iconify-icon icon="solar:folder-bold-duotone"></iconify-icon>
                                 <span class="hide-menu">Project List</span>
                             </a>
                         </li>
@@ -214,15 +214,15 @@
 
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('project.create') }}" aria-expanded="false">
-                                <iconify-icon icon="solar:user-plus-broken"></iconify-icon>
+                                <iconify-icon icon="solar:user-plus-bold-duotone"></iconify-icon>
                                 <span class="hide-menu">Create Project</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('project.showRestore') }}" aria-expanded="false">
-                                <iconify-icon icon="solar:refresh-bold-duotone"></iconify-icon>
-                                <span class="hide-menu">Recovery</span>
+                                <iconify-icon icon="solar:trash-bin-minimalistic-broken"></iconify-icon>
+                                <span class="hide-menu">Deleted Items</span>
                             </a>
                         </li>
                     </ul>

@@ -38,10 +38,10 @@ class AuthController extends Controller
             $redirect = $user->role == 'admin/dashboard';
 
             return redirect()->intended($redirect)
-                ->with('loginSuccess', 'Selamat datang, <strong>' . $user->name . '</strong>! Gunakan sistem dengan bijak.');
+                ->with('loginSuccess', 'Welcome, <strong>' . $user->name . '</strong>! Use the system wisely.');
         }
 
-        return back()->with('error', 'Email atau password salah.');
+        return back()->with('error', 'Incorrect email or password.');
     }
 
 

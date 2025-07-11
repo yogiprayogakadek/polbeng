@@ -22,4 +22,9 @@ class ProjectCategory extends Model
     {
         return $this->hasMany(ProjectGallery::class);
     }
+
+    public function projects()
+    {
+        return $this->hasMany(Project::class);
+    }
 }

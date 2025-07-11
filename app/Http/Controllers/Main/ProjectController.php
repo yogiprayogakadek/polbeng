@@ -333,4 +333,62 @@ class ProjectController extends Controller
             return back()->withInput()->with('error', 'There is an error: ' . $th->getMessage());
         }
     }
+
+    public function toggleStatus($id)
+    {
+        $project = Project::findOrFail($id);
+
+        $project->is_active = !$project->is_active;
+        $project->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Project ' . ($project->is_active ? 'activated' : 'disabled') . ' successfully.'
+        ]);
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $project = Project::findOrFail($id);
+
+            // Delete project data
+            $project->delete();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Project data successfully deleted.'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => 'There is an error: ' . $th->getMessage()
+            ], 500);
+        }
+    }
+
+    public function showRestore()
+    {
+        $data = Project::with('projectCategory')->onlyTrashed()->get();
+        // dd($data[0]->id);
+        return view('main.project.restore', compact('data'));
+    }
+
+    public function restore($id)
+    {
+        try {
+            $project = Project::onlyTrashed()->findOrFail($id);
+            $project->restore();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Project data was successfully recovered.'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Failed to recover data: ' . $th->getMessage()
+            ], 500);
+        }
+    }
 }

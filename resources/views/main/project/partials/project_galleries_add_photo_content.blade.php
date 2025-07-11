@@ -104,7 +104,7 @@
         init: function() {
             this.on("addedfile", function(file) {
                 updateRealInput(this.files);
-                toastr.success(`File "${file.name}" berhasil ditambahkan`, 'Upload Success', {
+                toastr.success(`"${file.name}" file added successfully`, 'Upload Success', {
                     closeButton: true,
                     progressBar: true,
                     timeOut: 3000
@@ -114,7 +114,7 @@
             this.on("removedfile", function(file) {
                 updateRealInput(this.files);
 
-                toastr.success(`File "${file.name}" berhasil dihapus`, 'Remove Success', {
+                toastr.success(`File "${file.name}" file deleted successfully`, 'Remove Success', {
                     closeButton: true,
                     progressBar: true,
                     timeOut: 3000

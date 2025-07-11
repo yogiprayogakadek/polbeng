@@ -98,7 +98,7 @@
     {{-- Danger Alert --}}
     @if (session('error'))
         <script>
-            toastr.error("{{ session('error') }}", "Login gagal", {
+            toastr.error("{{ session('error') }}", "Login Failed", {
                 closeButton: true,
             });
         </script>
@@ -106,7 +106,7 @@
 
     <script>
         $('body').on('click', '#forgotPassword', function() {
-            toastr.info("Gagal Login", "Hubungi admin untuk perubahan password!", {
+            toastr.info("Login Failed", "Contact admin for password change!", {
                 closeButton: true,
             });
         });

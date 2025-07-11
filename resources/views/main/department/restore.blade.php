@@ -22,7 +22,7 @@
 
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title fw-semibold mb-4">Restore Department</h5>
+            <h5 class="card-title fw-semibold mb-4">Deleted Items Department</h5>
 
             <div class="table-responsive">
                 <table id="table" class="table table-striped table-bordered text-nowrap align-middle" width="100%">
