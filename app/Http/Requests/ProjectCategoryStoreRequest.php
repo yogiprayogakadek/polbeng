@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ProjectCategoryStoreRequest extends FormRequest
 {
@@ -15,7 +16,14 @@ class ProjectCategoryStoreRequest extends FormRequest
     {
         return [
             'study_program_id' => 'required|integer',
-            'project_category_name' => 'required|string',
+            'project_category_name' => [
+                'required',
+                'string',
+                Rule::unique('project_categories', 'project_category_name')
+                    ->where(function ($query) {
+                        return $query->where('study_program_id', $this->study_program_id);
+                    }),
+            ],
         ];
     }
 

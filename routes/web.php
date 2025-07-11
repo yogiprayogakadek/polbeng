@@ -91,6 +91,16 @@ Route::middleware('auth')->group(function () {
 
             // detail
             Route::get('/detail/{id}', 'detail')->name('detail');
-            Route::get('/galleries/{id}', 'galleries')->name('galleries');
+
+            // PROJECT GALLERIES
+            Route::prefix('galleries')->group(function () {
+                Route::get('/{id}', 'galleries')->name('galleries');
+                Route::get('/modal/{projectDetailID}', 'showGalleriesModal')->name('galleries.modal');
+                Route::delete('/delete/{id}', 'galleriesDelete')->name('galleriesDelete');
+
+                // add photo to gallery modal
+                Route::get('/photo/add', 'addPhoto')->name('galleries.add.photo');
+                Route::post('/store', 'storeGalleryPhotos')->name('galleries.store');
+            });
         });
 });

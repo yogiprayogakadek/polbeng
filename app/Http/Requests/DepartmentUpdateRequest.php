@@ -14,8 +14,8 @@ class DepartmentUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'department_code' => 'required|string',
-            'department_name' => 'required|string',
+            'department_code' => 'required|string|unique:departments,department_code,' . $this->id,
+            'department_name' => 'required|string|unique:departments,department_name,' . $this->id,
         ];
     }
 }

@@ -9,11 +9,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css" rel="stylesheet" />
 
     <style>
-        /* Sembunyikan progress bar bawaan Dropzone */
-        .dz-progress {
-            display: none !important;
-        }
-
         .btn-outline-primary {
             border-radius: 25px;
             font-weight: 500;

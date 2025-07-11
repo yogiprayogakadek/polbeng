@@ -1,49 +1,6 @@
-<style>
-    #lightboxOverlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.8);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-    }
-
-    #lightboxOverlay img {
-        max-width: 90%;
-        max-height: 90%;
-        border-radius: 8px;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
-    }
-
-    .lightbox-close {
-        position: absolute;
-        top: 20px;
-        right: 30px;
-        color: #fff;
-        font-size: 40px;
-        cursor: pointer;
-        z-index: 10000;
-    }
-
-    .lightbox-trigger {
-        cursor: zoom-in;
-        transition: transform 0.2s ease;
-    }
-
-    .lightbox-trigger:hover {
-        transform: scale(1.03);
-    }
-</style>
-
-
-<!-- Lightbox Viewer -->
 <div id="lightboxOverlay" style="display: none;">
-    <span class="lightbox-close">&times;</span>
-    <img id="lightboxImage" src="" alt="Full Image">
+    <span class="lightbox-close" id="lightboxClose">&times;</span>
+    <img id="lightboxImage" src="" alt="Zoomed Image">
 </div>
 
 <div class="modal fade" id="projectDetailModal" tabindex="-1" data-bs-backdrop="static" role="dialog"
@@ -306,15 +263,29 @@
 
 <script>
     $(document).ready(function() {
+        // Klik gambar → munculkan lightbox
         $('.lightbox-trigger').on('click', function() {
-            const src = $(this).attr('src');
-            $('#lightboxImage').attr('src', src);
+            var imgSrc = $(this).attr('src');
+            $('#lightboxImage').attr('src', imgSrc);
             $('#lightboxOverlay').fadeIn();
         });
 
-        $('.lightbox-close, #lightboxOverlay').on('click', function(e) {
-            if (e.target !== this) return;
+        // Klik tombol X → sembunyikan lightbox
+        $('#lightboxClose').on('click', function() {
             $('#lightboxOverlay').fadeOut();
+        });
+
+        // Nonaktifkan klik di luar agar tidak menutup
+        $('#lightboxOverlay').on('click', function(e) {
+            // Cek apakah yang diklik adalah overlay itu sendiri (bukan gambar atau tombol)
+            if (e.target.id === 'lightboxOverlay') {
+                // Tidak melakukan apa-apa → tidak close
+            }
+        });
+
+        // Cegah klik di gambar dari menutup (jaga-jaga)
+        $('#lightboxImage').on('click', function(e) {
+            e.stopPropagation();
         });
     });
 </script>

@@ -5,6 +5,11 @@
 @push('css')
     <link rel="stylesheet"
         href="https://bootstrapdemos.adminmart.com/matdash/dist/assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
 @endpush
 
 @section('content')
@@ -54,7 +59,7 @@
                                 <td>{{ $project->school_year }}</td>
                                 <td>{{ $project->semester }}</td>
                                 <td class="text-center">
-                                    <button class="btn btn btn-outline-primary detail-btn"
+                                    <button class="btn btn btn-outline-primary modal-btn"
                                         data-url="{{ route('project.detail', $project->id) }}"
                                         data-modal-id="projectDetailModal" data-bs-toggle="tooltip"
                                         data-bs-custom-class="custom-tooltip" data-bs-placement="top"
@@ -64,14 +69,24 @@
                                     </button>
                                 </td>
                                 <td class="text-center">
-                                    <button class="btn btn btn-outline-primary galleries-btn"
+                                    {{-- <button class="btn btn btn-outline-primary modal-btn"
                                         data-url="{{ route('project.galleries', $project->id) }}"
                                         data-modal-id="projectGalleriesModal" data-bs-toggle="tooltip"
                                         data-bs-custom-class="custom-tooltip" data-bs-placement="top"
                                         data-bs-title="Project Galleries">
                                         <iconify-icon icon="solar:album-line-duotone" width="1em"
                                             height="1em"></iconify-icon>
+                                    </button> --}}
+                                    <button class="btn btn-outline-primary modal-btn"
+                                        data-url="{{ route('project.galleries.modal', $project->detail->id) }}"
+                                        data-modal-id="projectGalleriesModal" data-bs-toggle="tooltip"
+                                        data-bs-custom-class="custom-tooltip" data-bs-placement="top"
+                                        data-bs-title="Project Galleries">
+
+                                        <iconify-icon icon="solar:album-line-duotone" width="1em"
+                                            height="1em"></iconify-icon>
                                     </button>
+
                                 </td>
                                 <td>
                                     <span
@@ -217,13 +232,36 @@
             });
         });
 
-        $('body').on('click', '.detail-btn', function() {
+        $('body').on('click', '.modal-btn', function() {
             let url = $(this).data('url');
             let modalID = $(this).data('modal-id');
-            $.get(url, function(data) {
-                $('.modal-render').html(data);
+            $.get(url, function(response) {
+                let htmlContent = '';
+
+                if (typeof response === 'object' && response.status !== undefined) {
+                    htmlContent = response.html;
+                } else {
+                    htmlContent = response; // fallback for general response (without JSON wrapper)
+                }
+
+                $('.modal-render').html(htmlContent);
                 $('#' + modalID).modal('show');
+
+                // Re-initialize GLightbox if exists
+                if (typeof GLightbox === 'function') {
+                    GLightbox({
+                        selector: '.glightbox',
+                        touchNavigation: true,
+                        loop: true,
+                        zoomable: true
+                    });
+                }
+
+                // re-run delete event if exists
+                if (typeof bindDeleteButtons === 'function') {
+                    bindDeleteButtons();
+                }
             });
-        })
+        });
     </script>
 @endpush

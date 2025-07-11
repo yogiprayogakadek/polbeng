@@ -9,7 +9,7 @@
 @section('page-title', 'Project Category')
 
 @section('content')
-    <form action="{{ route('projectCategory.update', $studyProgram->id) }}" method="POST">
+    <form action="{{ route('projectCategory.update', $projectCategory->id) }}" method="POST">
         @csrf
         @method('PUT')
         {{-- Alert Success --}}
@@ -42,7 +42,7 @@
                                 class="select2 form-control @error('study_program_id') is-invalid @enderror">
                                 @foreach ($studyPrograms as $key => $value)
                                     <option value="{{ $key }}"
-                                        {{ $projectCategory->study_program_id == $key ? 'selected' : '' }}>
+                                        {{ old('study_program_id', $projectCategory->study_program_id) == $key ? 'selected' : '' }}>
                                         {{ $value }}
                                     </option>
                                 @endforeach

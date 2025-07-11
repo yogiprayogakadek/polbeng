@@ -53,7 +53,7 @@
                                 class="select2 form-control @error('department_id') is-invalid @enderror">
                                 @foreach ($departments as $key => $value)
                                     <option value="{{ $key }}"
-                                        {{ old('department_id' == $key ? 'selected' : '') }}>{{ $value }}</option>
+                                        {{ old('department_id') == $key ? 'selected' : '' }}>{{ $value }}</option>
                                 @endforeach
                             </select>
                             @error('department_id')
