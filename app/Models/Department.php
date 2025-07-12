@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Ramsey\Uuid\Uuid;
 
 class Department extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['department_code', 'department_name', 'is_active'];
+    protected $fillable = ['uuid', 'department_code', 'department_name', 'is_active'];
 
     protected static function booted()
     {
@@ -33,5 +34,14 @@ class Department extends Model
     public function studyPrograms()
     {
         return $this->hasMany(StudyProgram::class);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->uuid = str_replace('-', '', Uuid::uuid4()->getHex());
+        });
     }
 }

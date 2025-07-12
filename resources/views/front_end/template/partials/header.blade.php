@@ -23,7 +23,9 @@
                         </a>
                         <ul class="dropdown-menu">
                             @foreach (listDepartment() as $department)
-                                <li><a class="dropdown-item" href="#">{{ $department->department_name }}</a></li>
+                                <li><a class="dropdown-item"
+                                        href="{{ route('frontend.project.department', ['department' => Str::slug($department->department_name), 'uuid' => $department->uuid]) }}">{{ $department->department_name }}</a>
+                                </li>
                             @endforeach
                         </ul>
                     </li>

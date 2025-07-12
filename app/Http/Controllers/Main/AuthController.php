@@ -35,7 +35,7 @@ class AuthController extends Controller
             // }
 
             // $redirect = $user->role == 'admin' ? 'admin/dashboard' : 'pegawai/dashboard';
-            $redirect = $user->role == 'admin/dashboard';
+            $redirect = 'admin/dashboard';
 
             return redirect()->intended($redirect)
                 ->with('loginSuccess', 'Welcome, <strong>' . $user->name . '</strong>! Use the system wisely.');

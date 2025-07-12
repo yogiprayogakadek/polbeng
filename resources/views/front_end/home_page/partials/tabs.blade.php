@@ -50,7 +50,7 @@
                     </div>
                     <div
                         class="position-absolute top-0 start-0 w-100 h-100 bg-white bg-opacity-75 d-flex align-items-center justify-content-center opacity-0 group-hover-opacity-100 transition-all rounded-3">
-                        <a href="{{ route('frontend.project.index', $totalProject->project_category_id) }}"
+                        <a href="{{ route('frontend.project.index', $totalProject->uuid) }}"
                             class="btn btn-gradient-primary rounded-pill px-4 py-2 shadow-lg">
                             <i class="ti ti-eye me-2"></i> View Details
                         </a>

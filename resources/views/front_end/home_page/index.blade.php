@@ -2,6 +2,50 @@
 
 @section('page-title', 'Home Page')
 
+@push('css')
+    <!-- GLightbox CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
+
+    <style>
+        .video-thumb {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .video-thumb img {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .video-thumb:hover img {
+            transform: scale(1.02);
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            z-index: 5;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .video-thumb:hover .video-overlay {
+            opacity: 1;
+        }
+
+        .fade-in {
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .fade-in-loaded {
+            opacity: 1;
+        }
+    </style>
+@endpush
+
 @section('content')
     <!-- Banner Start -->
     <section class="py-lg-7 pt-lg-12 bg-light-gray overflow-hidden">
@@ -24,11 +68,34 @@
                     </div>
                 </div>
                 <div class="col-lg-6">
-                    <div class="ratio ratio-16x9">
-                        <iframe src="https://www.youtube.com/embed/YNrkcCtOZIU" title="Project-Based Learning at Polibatam"
-                            frameborder="0" allowfullscreen></iframe>
-                    </div>
+                    @php
+                        $videoUrl = 'https://www.youtube.com/watch?v=omgUq6hwrdw';
+                        $thumb = videoThumbnail($videoUrl);
+                    @endphp
+
+                    @if ($thumb)
+                        <a href="{{ $videoUrl }}"
+                            class="video-thumb glightbox-video d-block rounded overflow-hidden position-relative"
+                            data-type="video" data-gallery="video" data-width="1280" title="Tonton Video"
+                            style="aspect-ratio: 16/9;">
+
+                            {{-- Thumbnail --}}
+                            <img src="{{ $thumb }}" alt="Thumbnail" class="w-100 h-100 object-fit-cover rounded"
+                                loading="lazy" style="image-rendering: auto;">
+
+                            {{-- Overlay Play Button --}}
+                            <div class="video-overlay">
+                                <iconify-icon icon="solar:clapperboard-open-play-line-duotone" width="2em" height="2em"
+                                    class="text-white rounded-circle p-3" style="background-color: #e53935;">
+                                </iconify-icon>
+                            </div>
+                        </a>
+                    @endif
+
                 </div>
+
+
+
             </div>
         </div>
     </section>
@@ -132,6 +199,14 @@
 @endsection
 
 @push('script')
+    @push('script')
+        <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+        <script>
+            const lightboxVideos = GLightbox({
+                selector: '.glightbox-video'
+            });
+        </script>
+    @endpush
     <script>
         function getTabContent(id) {
             $.get('homepage/project-category/' + id, function(response) {
@@ -145,6 +220,10 @@
                 let departmentID = $(this).data('department-id')
                 getTabContent(departmentID)
             })
+        });
+
+        document.querySelectorAll('img.fade-in').forEach(img => {
+            img.onload = () => img.classList.add('fade-in-loaded');
         });
     </script>
 @endpush

@@ -23,6 +23,7 @@ class HomePageController extends Controller
     {
         $totalProjects = DB::table('project_categories')
             ->select(
+                'project_categories.uuid',
                 'project_categories.project_category_name',
                 'project_categories.id as project_category_id',
                 DB::raw('COUNT(projects.id) as total')
@@ -30,7 +31,7 @@ class HomePageController extends Controller
             ->leftJoin('projects', 'project_categories.id', '=', 'projects.project_category_id')
             ->leftJoin('study_programs', 'project_categories.study_program_id', '=', 'study_programs.id')
             ->where('study_programs.department_id', $departmentID)
-            ->groupBy('project_categories.id', 'project_categories.project_category_name')
+            ->groupBy('project_categories.id', 'project_categories.project_category_name', 'project_categories.uuid')
             ->having('total', '>', 0)
             ->get();
 

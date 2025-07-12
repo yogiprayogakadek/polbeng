@@ -26,7 +26,7 @@
                 </p>
 
                 <div class="mt-3 text-end">
-                    <a href="{{ url('/projects/detail/' . $project->id) }}"
+                    <a href="{{ route('frontend.project.detail', ['slug' => Str::slug($project->project_title), 'uuid' => $project->uuid]) }}"
                         class="btn btn-outline-primary rounded-pill px-4 py-2 shadow-sm">
                         <i class="ti ti-eye me-1"></i> Read More
                     </a>

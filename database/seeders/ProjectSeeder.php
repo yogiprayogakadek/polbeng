@@ -15,10 +15,8 @@ class ProjectSeeder extends Seeder
     public function run()
     {
         $projectCategories = ProjectCategory::all();
-        $totalProjects = 3200; // Bisa diubah jadi lebih banyak
+        $totalProjects = 3200;
         $categoryCount = $projectCategories->count();
-
-        // Hitung berapa banyak project per kategori
         $projectsPerCategory = (int) ceil($totalProjects / $categoryCount);
 
         $faker = fake();
@@ -36,8 +34,8 @@ class ProjectSeeder extends Seeder
                     'thumbnail' => 'assets/images/projects/dummy_datas/thumbnails/sample.png',
                 ]);
 
-                // Generate anggota antara 2–5 orang
-                $memberCount = $faker->numberBetween(2, 5);
+                // Generate 2–5 anggota
+                $memberCount = $faker->numberBetween(5, 10);
                 $members = [];
 
                 for ($j = 0; $j < $memberCount; $j++) {
@@ -47,8 +45,8 @@ class ProjectSeeder extends Seeder
                     ];
                 }
 
-                // Deskripsi panjang dan bervariasi (2–5 paragraf)
-                $description = $faker->paragraphs($faker->numberBetween(2, 5), true);
+                // Deskripsi panjang (2–5 paragraf)
+                $description = $faker->paragraphs($faker->numberBetween(5, 8), true);
 
                 $projectDetail = ProjectDetail::create([
                     'project_id' => $project->id,
@@ -59,11 +57,14 @@ class ProjectSeeder extends Seeder
                     'poster_path' => 'assets/images/projects/dummy_datas/posters/sample.png',
                 ]);
 
-                // Galeri dummy
-                ProjectGallery::create([
-                    'project_detail_id' => $projectDetail->id,
-                    'image_path' => 'assets/images/projects/dummy_datas/galleries/sample.png',
-                ]);
+                // Galeri dummy: generate 3–6 gambar
+                $galleryCount = $faker->numberBetween(5, 10);
+                for ($k = 0; $k < $galleryCount; $k++) {
+                    ProjectGallery::create([
+                        'project_detail_id' => $projectDetail->id,
+                        'image_path' => 'assets/images/projects/dummy_datas/galleries/sample.png',
+                    ]);
+                }
             }
         }
     }

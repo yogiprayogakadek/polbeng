@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('project_categories', function (Blueprint $table) {
             $table->id();
+            $table->string('uuid', 50);
             $table->foreignId('study_program_id')->references('id')->on('study_programs')->onDelete('cascade');
             $table->string('project_category_name');
             $table->boolean('is_active')->default(true);

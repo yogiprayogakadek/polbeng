@@ -3,7 +3,7 @@
 
 @include('front_end.template.partials.head')
 
-<body>
+<body class="d-flex flex-column min-vh-100">
     <!-- Preloader -->
     <div class="preloader">
         <img src="{{ asset('assets/images/logo/logo.png') }}" alt="loader" class="lds-ripple img-fluid" />

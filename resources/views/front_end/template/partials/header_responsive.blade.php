@@ -26,7 +26,8 @@
                     <ul class="list-unstyled">
                         @foreach (listDepartment() as $department)
                             <li>
-                                <a href="#" class="d-block py-1 text-dark">{{ $department->department_name }}</a>
+                                <a href="{{ route('frontend.project.department', ['department' => Str::slug($department->department_name), 'uuid' => $department->uuid]) }}"
+                                    class="d-block py-1 text-dark">{{ $department->department_name }}</a>
                             </li>
                         @endforeach
                     </ul>

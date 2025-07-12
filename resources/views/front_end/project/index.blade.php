@@ -1,6 +1,6 @@
 @extends('front_end.template.master')
 
-@section('page-title', 'Home Page')
+@section('page-title', 'Project')
 
 @section('content')
     <section class="py-5 bg-light-gray">
@@ -53,7 +53,7 @@
                                 </p>
 
                                 <div class="mt-3 text-end">
-                                    <a href="{{ url('/projects/detail/' . $project->id) }}"
+                                    <a href="{{ route('frontend.project.detail', ['slug' => Str::slug($project->project_title), 'uuid' => $project->uuid]) }}"
                                         class="btn btn-outline-primary rounded-pill px-4 py-2 shadow-sm">
                                         <i class="ti ti-eye me-1"></i> Read More
                                     </a>
@@ -87,7 +87,7 @@
             page++;
             const query = $('#search-project').val();
             $.ajax({
-                url: `/projects/load-more?page=${page}&query=${query}&projectCategoryID=${projectCategoryID}`,
+                url: `/projects/filter/load-more?page=${page}&query=${query}&projectCategoryID=${projectCategoryID}`,
                 method: 'GET',
                 success: function(html) {
                     if ($.trim(html) !== '') {
@@ -130,7 +130,7 @@
             const query = $(this).val();
 
             $.ajax({
-                url: `/projects/search?query=${query}&projectCategoryID=${projectCategoryID}`,
+                url: `/projects/filter/search?query=${query}&projectCategoryID=${projectCategoryID}`,
                 method: 'GET',
                 success: function(html) {
                     $('#project-list').html(html);

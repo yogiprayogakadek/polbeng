@@ -3,18 +3,23 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Department;
 use App\Models\Project;
+use App\Models\ProjectCategory;
+use App\Models\StudyProgram;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProjectController extends Controller
 {
-    public function index($projectCategoryID)
+    public function index($uuid)
     {
+        $projectCategory = ProjectCategory::where('uuid', $uuid)->firstOrFail();
+        $projectCategoryID = $projectCategory->id;
         $projects = Project::with(['projectCategory.studyProgram.department', 'detail'])
             ->where('project_category_id', $projectCategoryID)
             ->orderBy('created_at', 'desc')
             ->paginate(3);
-        // dd($projects);
         return view('front_end.project.index', compact('projects', 'projectCategoryID'));
     }
 
@@ -63,5 +68,45 @@ class ProjectController extends Controller
         $html = view('front_end.project.partials.project_card', compact('projects'))->render();
 
         return response()->json($html);
+    }
+
+    public function detail($slug, $uuid)
+    {
+        $project = Project::with('detail.galleries')->where('uuid', $uuid)->firstOrFail();
+        return view('front_end.project_detail.index', compact('project'));
+    }
+
+    public function departmentProject($slug, $uuid)
+    {
+        $studyPrograms = StudyProgram::with('department')
+            ->whereHas('department', function ($q) use ($uuid) {
+                $q->where('uuid', $uuid);
+            })->get();
+
+        return view('front_end.department.index', compact('studyPrograms'));
+    }
+
+    public function totalProjectByStudyProgram($id)
+    {
+        $departmentID = StudyProgram::findOrFail($id)->department_id;
+        $totalProjects = DB::table('project_categories')
+            ->select(
+                'project_categories.uuid',
+                'project_categories.project_category_name',
+                'project_categories.id as project_category_id',
+                DB::raw('COUNT(projects.id) as total')
+            )
+            ->leftJoin('projects', 'project_categories.id', '=', 'projects.project_category_id')
+            ->leftJoin('study_programs', 'project_categories.study_program_id', '=', 'study_programs.id')
+            ->where('study_programs.id', $id)
+            ->groupBy('project_categories.id', 'project_categories.project_category_name', 'project_categories.uuid')
+            ->having('total', '>', 0)
+            ->get();
+
+        $view = view('front_end.department.partials.accordion', compact('totalProjects', 'departmentID'))->render();
+
+        return response()->json([
+            'html' => $view
+        ]);
     }
 }

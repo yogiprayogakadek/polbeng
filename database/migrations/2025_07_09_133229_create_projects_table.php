@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
+            $table->string('uuid', 50);
             $table->foreignId('project_category_id')->references('id')->on('project_categories')->onDelete('cascade');
             $table->text('project_title');
             $table->char('school_year', 9);
             $table->enum('semester', ['Ganjil', 'Genap']);
-            $table->string('thumbnail', 100)->nullable();
+            $table->string('thumbnail')->nullable();
             $table->boolean('is_active')->default(true);
             $table->softDeletes();
             $table->timestamps();

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('description');
             $table->string('video_trailer_url');
             $table->string('presentation_video_url');
-            $table->string('poster_path', 100);
+            $table->string('poster_path');
             $table->timestamps();
         });
     }

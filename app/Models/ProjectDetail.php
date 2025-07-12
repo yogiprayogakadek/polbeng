@@ -28,4 +28,9 @@ class ProjectDetail extends Model
             $model->uuid = str_replace('-', '', Uuid::uuid4()->getHex());
         });
     }
+
+    public function galleries()
+    {
+        return $this->hasMany(ProjectGallery::class);
+    }
 }

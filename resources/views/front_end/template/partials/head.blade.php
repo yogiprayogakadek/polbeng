@@ -13,4 +13,6 @@
     <title>Politeknik Negeri Bengkalis - @yield('page-title')</title>
     <!-- Owl Carousel  -->
     <link rel="stylesheet" href="{{ asset('assets/css/owl.carousel.min.css') }}" />
+
+    @stack('css')
 </head>

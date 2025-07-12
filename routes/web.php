@@ -20,16 +20,16 @@ Route::controller(AuthController::class)->group(function () {
 
 
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->prefix('admin')->group(function () {
     // DASHBOARD
     Route::controller(DashboardController::class)->group(function () {
-        Route::prefix('admin')->group(function () {
-            Route::get('/dashboard', 'index')->name('dashboard.admin');
-            Route::get('/dashboard/projects-per-year', 'getProjectsPerYear')->name('dashboard.projectsPerYear');
-            Route::get('/dashboard/projects-per-category', 'getProjectsPerCategory')->name('dashboard.projectsPerCategory');
-            Route::get('/dashboard/recent-projects', 'recentProjects')->name('dashboard.recentProjects');
-            Route::get('/dashboard/projects-trend', 'projectsTrend')->name('dashboard.projectsTrend');
-        });
+        // Route::prefix('admin')->group(function () {
+        Route::get('/dashboard', 'index')->name('dashboard.admin');
+        Route::get('/dashboard/projects-per-year', 'getProjectsPerYear')->name('dashboard.projectsPerYear');
+        Route::get('/dashboard/projects-per-category', 'getProjectsPerCategory')->name('dashboard.projectsPerCategory');
+        Route::get('/dashboard/recent-projects', 'recentProjects')->name('dashboard.recentProjects');
+        Route::get('/dashboard/projects-trend', 'projectsTrend')->name('dashboard.projectsTrend');
+        // });
     });
 
     // DEPARTMENT
@@ -119,8 +119,14 @@ Route::name('frontend.')->group(function () {
     });
 
     Route::controller(FrontendProjectController::class)->group(function () {
-        Route::get('/project/{projectCategoryID}', 'index')->name('project.index');
-        Route::get('/projects/load-more', 'loadMore')->name('project.loadmore');
-        Route::get('/projects/search', 'search')->name('project.search');
+        Route::get('/projects/{category_uuid}', 'index')->name('project.index');
+        Route::get('/projects/filter/load-more', 'loadMore')->name('project.loadmore');
+        Route::get('/projects/filter/search', 'search')->name('project.search');
+
+        Route::get('/projects/department/{department}/{uuid}', 'departmentProject')->name('project.department');
+        Route::get('/projects/study-program/filter/total/{id}', 'totalProjectByStudyProgram')->name('project.total');
+
+        // DETAIL
+        Route::get('/detail/{slug}/{uuid}', 'detail')->name('project.detail');
     });
 });
