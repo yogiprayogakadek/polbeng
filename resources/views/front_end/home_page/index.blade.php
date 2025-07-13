@@ -14,6 +14,101 @@
             --danger-gradient: linear-gradient(135deg, #ef4444, #ec4899);
         }
 
+        /* Video Player Styles */
+        .video-player-container {
+            position: relative;
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            background: #000;
+        }
+
+        .video-player-container:hover {
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            transform: translateY(-3px);
+        }
+
+        .video-embed-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+        }
+
+        #player {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: none;
+            /* Hidden by default */
+        }
+
+        .video-poster-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-size: cover;
+            background-position: center;
+            z-index: 2;
+            cursor: pointer;
+        }
+
+        .video-poster-overlay::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .video-play-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--danger-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+            z-index: 3;
+        }
+
+        .video-play-icon:hover {
+            transform: scale(1.1);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            .video-player-container {
+                margin-top: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .video-player-container {
+                border-radius: 8px;
+            }
+
+            .video-play-icon {
+                width: 60px;
+                height: 60px;
+            }
+        }
+
+        /* Keep all your existing styles */
         .category-card {
             transition: all 0.3s ease;
             border-radius: 12px;
@@ -37,58 +132,6 @@
             font-size: 0.8rem;
         }
 
-        /* Video Thumbnail Styles */
-        .video-thumb {
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-
-        .video-thumb img {
-            transition: transform 0.5s ease;
-        }
-
-        .video-thumb:hover {
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-        }
-
-        .video-thumb:hover img {
-            transform: scale(1.05);
-        }
-
-        .video-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 1;
-            transition: opacity 0.3s ease;
-        }
-
-        .play-button {
-            width: 80px;
-            height: 80px;
-            background: var(--danger-gradient);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.3s ease;
-        }
-
-        .video-thumb:hover .play-button {
-            transform: scale(1.1);
-        }
-
-        /* Impact Cards */
         .impact-card {
             background: white;
             border-radius: 12px;
@@ -115,7 +158,6 @@
             font-size: 1.75rem;
         }
 
-        /* Department Tabs */
         .tabs-btn {
             border-radius: 12px;
             padding: 1.5rem;
@@ -138,7 +180,6 @@
             color: white !important;
         }
 
-        /* Dark Mode Support */
         body.dark {
             background-color: #1a1a2e;
             color: #e6e6e6;
@@ -155,7 +196,6 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         }
 
-        /* Responsive Adjustments */
         @media (max-width: 768px) {
             .tabs-btn {
                 padding: 1rem;
@@ -196,23 +236,21 @@
                 <div class="col-lg-6 animate__animated animate__fadeInRight">
                     @php
                         $videoUrl = 'https://www.youtube.com/watch?v=omgUq6hwrdw';
-                        $thumb = videoThumbnail($videoUrl);
+                        $thumbnailUrl = 'https://img.youtube.com/vi/omgUq6hwrdw/maxresdefault.jpg';
                     @endphp
 
-                    @if ($thumb)
-                        <a href="{{ $videoUrl }}" class="video-thumb glightbox-video position-relative"
-                            data-type="video" data-gallery="video" data-width="1280" title="Tonton Video"
-                            style="aspect-ratio: 16/9;">
-                            <img src="{{ $thumb }}" alt="Project Showcase Video" class="w-100 h-100 object-fit-cover"
-                                loading="lazy">
-                            <div class="video-overlay">
-                                <div class="play-button">
-                                    <iconify-icon icon="solar:play-circle-bold" width="2em" height="2em"
-                                        class="text-white"></iconify-icon>
-                                </div>
+                    <div class="video-player-container">
+                        <div class="video-embed-wrapper">
+                            <div id="player"></div>
+                        </div>
+                        <div class="video-poster-overlay" id="video-poster"
+                            style="background-image: url('{{ $thumbnailUrl }}')">
+                            <div class="video-play-icon">
+                                <iconify-icon icon="solar:play-circle-bold" width="2em" height="2em"
+                                    class="text-white"></iconify-icon>
                             </div>
-                        </a>
-                    @endif
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -350,11 +388,62 @@
 @endsection
 
 @push('script')
-    <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+    <!-- YouTube IFrame API -->
     <script>
+        // Load YouTube API script
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    </script>
+
+    <!-- GLightbox JS -->
+    <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+
+    <script>
+        // YouTube player variables
+        let player;
+        const videoId = 'omgUq6hwrdw';
+        const videoPoster = document.getElementById('video-poster');
+
+        // This function creates an <iframe> (and YouTube player) after the API code downloads.
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '100%',
+                width: '100%',
+                videoId: videoId,
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 1,
+                    'rel': 0,
+                    'modestbranding': 1,
+                    'showinfo': 0
+                },
+                events: {
+                    'onReady': onPlayerReady
+                }
+            });
+        }
+
+        // When player is ready
+        function onPlayerReady(event) {
+            // Hide the player initially
+            document.getElementById('player').style.display = 'none';
+
+            // When poster is clicked
+            videoPoster.addEventListener('click', function() {
+                // Hide poster
+                videoPoster.style.display = 'none';
+                // Show player
+                document.getElementById('player').style.display = 'block';
+                // Play video
+                player.playVideo();
+            });
+        }
+
+        // Initialize GLightbox
         $(document).ready(function() {
-            // Initialize GLightbox
-            const lightboxVideos = GLightbox({
+            const lightbox = GLightbox({
                 selector: '.glightbox-video',
                 touchNavigation: true,
                 loop: false,
