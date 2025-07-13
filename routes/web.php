@@ -11,7 +11,7 @@ use App\Http\Controllers\Main\StudyProgramController;
 use Illuminate\Support\Facades\Route;
 
 // AUTH
-Route::controller(AuthController::class)->group(function () {
+Route::prefix('admin')->controller(AuthController::class)->group(function () {
     Route::get('/login', 'showLogin')->middleware('guest');
     Route::post('/login', 'login')->name('login');
 
