@@ -1,97 +1,29 @@
-<div class="tab-pane fade show active" id="content-{{ $departmentID }}" role="tabpanel">
-    <div class="row align-items-center">
-        @php
-            $colors = [
-                'primary',
-                // 'success',
-                // 'info',
-                // 'danger',
-                // 'warning',
-                'secondary',
-                'dark',
-                // 'pink',
-                // 'cyan',
-                'indigo',
-            ];
-            $icons = [
-                'bell',
-                'rocket',
-                'bulb',
-                'device-desktop',
-                'layers',
-                'chart-bar',
-                'camera',
-                'palette',
-                'video',
-                'code',
-                'settings',
-                'cloud',
-            ];
-        @endphp
-        @forelse ($totalProjects as $totalProject)
-            <div class="col-lg-3 col-md-6">
-                @php
-                    $color = $colors[array_rand($colors)];
-                    $icon = $icons[array_rand($icons)];
-                @endphp
-                <div
-                    class="card border-start border-{{ $color }} group overflow-hidden position-relative rounded-3 shadow-sm hover-scale">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <span class="text-{{ $color }} display-6">
-                                <i class="ti ti-folder"></i>
-                            </span>
-                            <div>
-                                <h2 class="fs-7 mb-1">{{ $totalProject->total }}</h2>
-                                <p class="fw-medium text-{{ $color }} mb-0">
-                                    {{ $totalProject->project_category_name }}</p>
-                            </div>
-                        </div>
+<div class="row g-4">
+    @if ($totalProjects->count() > 0)
+        @foreach ($totalProjects as $category)
+            <div class="col-xl-3 col-lg-4 col-md-6 animate__animated animate__fadeInUp">
+                <div class="category-card bg-white shadow-sm h-100">
+                    <div class="position-relative" style="height: 180px; overflow: hidden;">
+                        <img src="https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+                            alt="{{ $category->project_category_name }}" class="w-100 h-100 object-fit-cover">
+                        <span class="category-badge">{{ $category->total }} Projects</span>
                     </div>
-                    <div
-                        class="position-absolute top-0 start-0 w-100 h-100 bg-white bg-opacity-75 d-flex align-items-center justify-content-center opacity-0 group-hover-opacity-100 transition-all rounded-3">
-                        <a href="{{ route('frontend.project.index', $totalProject->uuid) }}"
-                            class="btn btn-gradient-primary rounded-pill px-4 py-2 shadow-lg">
-                            <i class="ti ti-eye me-2"></i> View Details
+                    <div class="p-4">
+                        <h5 class="fw-bold mb-3">{{ $category->project_category_name }}</h5>
+                        <a href="{{ route('frontend.project.index', $category->uuid) }}"
+                            class="btn btn-outline-primary stretched-link">
+                            View Projects
                         </a>
                     </div>
                 </div>
             </div>
-        @empty
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <h3 class="text-center">Data not available for this department.</h3>
-                    </div>
-                </div>
+        @endforeach
+    @else
+        <div class="col-12 py-5 text-center">
+            <div class="alert alert-info">
+                <iconify-icon icon="mdi:information-outline" class="me-2"></iconify-icon>
+                No project categories found for this department
             </div>
-        @endforelse
-    </div>
+        </div>
+    @endif
 </div>
-
-<style>
-    .hover-scale {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .hover-scale:hover {
-        transform: translateY(-5px) scale(1.03);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .btn-gradient-primary {
-        background: linear-gradient(45deg, #5b76f7, #845ef7);
-        border: none;
-        color: #fff;
-    }
-
-    .btn-gradient-primary:hover {
-        background: linear-gradient(45deg, #845ef7, #5b76f7);
-        box-shadow: 0 4px 15px rgba(91, 118, 247, 0.5);
-    }
-
-    .group:hover .group-hover-opacity-100 {
-        opacity: 1 !important;
-        transition: opacity 0.3s ease-in-out;
-    }
-</style>

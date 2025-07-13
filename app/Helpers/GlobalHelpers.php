@@ -2,10 +2,10 @@
 
 use App\Models\Department;
 
+// Existing functions
 function listDepartment()
 {
     $departments = Department::where('is_active', true)->get();
-
     return $departments;
 }
 
@@ -27,31 +27,14 @@ function toEmbedUrl($url)
     }
 
     if (strpos($url, 'drive.google.com/file/d/') !== false) {
-        // Extract ID from Google Drive link
         preg_match('/\/file\/d\/([^\/]+)\//', $url, $matches);
         return isset($matches[1])
             ? 'https://drive.google.com/file/d/' . $matches[1] . '/preview'
             : $url;
     }
 
-    return $url; // default return if unrecognized
+    return $url;
 }
-
-// function videoThumbnail($url)
-// {
-//     // YouTube - https://img.youtube.com/vi/{id}/hqdefault.jpg
-//     if (strpos($url, 'youtube.com') !== false || strpos($url, 'youtu.be') !== false) {
-//         preg_match('/(?:v=|\/)([0-9A-Za-z_-]{11})/', $url, $matches);
-//         return isset($matches[1]) ? "https://img.youtube.com/vi/{$matches[1]}/hqdefault.jpg" : null;
-//     }
-
-//     // Vimeo thumbnail requires API or oEmbed, so just return placeholder or null
-//     if (strpos($url, 'vimeo.com') !== false) {
-//         return asset('assets/images/video-placeholder.jpg'); // custom fallback
-//     }
-
-//     return null;
-// }
 
 function videoThumbnail($url)
 {
@@ -67,70 +50,70 @@ function videoThumbnail($url)
     }
 
     if ($videoId) {
-        // Coba ambil thumbnail resolusi tinggi
         $maxres = "https://img.youtube.com/vi/{$videoId}/maxresdefault.jpg";
         $hq = "https://img.youtube.com/vi/{$videoId}/hqdefault.jpg";
 
-        // Gunakan maxres jika tersedia, fallback ke hqdefault
         if (@getimagesize($maxres)) {
             return $maxres;
-        } else {
-            return $hq;
         }
+        return $hq;
     }
 
     return null;
 }
 
+// New asset path resolution functions
+if (!function_exists('resolveAssetPath')) {
+    /**
+     * Resolves the correct asset path whether it's local storage or external URL
+     *
+     * @param string|null $path
+     * @return string
+     */
+    function resolveAssetPath(?string $path): string
+    {
+        if (empty($path)) {
+            return '';
+        }
 
-// function toEmbedUrl($url)
-// {
-//     if (strpos($url, 'youtube.com/watch') !== false) {
-//         parse_str(parse_url($url, PHP_URL_QUERY), $params);
-//         $id = $params['v'] ?? null;
-//         return [
-//             'url' => 'https://www.youtube.com/watch?v=' . $id,
-//             'embed' => 'https://www.youtube.com/embed/' . $id,
-//             'embeddable' => true,
-//             'source' => 'youtube'
-//         ];
-//     }
+        // Check if it's already a full URL
+        if (filter_var($path, FILTER_VALIDATE_URL)) {
+            return $path;
+        }
 
-//     if (strpos($url, 'youtu.be/') !== false) {
-//         $id = substr(parse_url($url, PHP_URL_PATH), 1);
-//         return [
-//             'url' => 'https://youtu.be/' . $id,
-//             'embed' => 'https://www.youtube.com/embed/' . $id,
-//             'embeddable' => true,
-//             'source' => 'youtube'
-//         ];
-//     }
+        // Handle local storage path
+        return asset('storage/' . ltrim($path, '/'));
+    }
+}
 
-//     if (strpos($url, 'vimeo.com/') !== false) {
-//         $id = basename(parse_url($url, PHP_URL_PATH));
-//         return [
-//             'url' => 'https://vimeo.com/' . $id,
-//             'embed' => 'https://player.vimeo.com/video/' . $id,
-//             'embeddable' => true,
-//             'source' => 'vimeo'
-//         ];
-//     }
+if (!function_exists('isExternalUrl')) {
+    /**
+     * Checks if a given path is an external URL
+     *
+     * @param string|null $path
+     * @return bool
+     */
+    function isExternalUrl(?string $path): bool
+    {
+        if (empty($path)) {
+            return false;
+        }
 
-//     if (strpos($url, 'drive.google.com/file/d/') !== false) {
-//         preg_match('/\/file\/d\/([^\/]+)\//', $url, $matches);
-//         $id = $matches[1] ?? null;
-//         return [
-//             'url' => $url,
-//             'embed' => 'https://drive.google.com/file/d/' . $id . '/preview',
-//             'embeddable' => false,
-//             'source' => 'google-drive'
-//         ];
-//     }
+        return filter_var($path, FILTER_VALIDATE_URL) !== false;
+    }
+}
 
-//     return [
-//         'url' => $url,
-//         'embed' => $url,
-//         'embeddable' => false,
-//         'source' => 'unknown'
-//     ];
-// }
+if (!function_exists('storeFileAndGetPath')) {
+    /**
+     * Stores uploaded file and returns the storage path
+     *
+     * @param \Illuminate\Http\UploadedFile $file
+     * @param string $directory
+     * @return string
+     */
+    function storeFileAndGetPath($file, string $directory = 'uploads'): string
+    {
+        $path = $file->store("public/{$directory}");
+        return str_replace('public/', '', $path);
+    }
+}

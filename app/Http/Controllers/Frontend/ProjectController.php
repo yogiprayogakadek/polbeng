@@ -73,7 +73,15 @@ class ProjectController extends Controller
     public function detail($slug, $uuid)
     {
         $project = Project::with('detail.galleries')->where('uuid', $uuid)->firstOrFail();
-        return view('front_end.project_detail.index', compact('project'));
+        $relatedProjects = Project::where(
+            'project_category_id',
+            $project->project_category_id,
+        )
+            ->where('id', '!=', $project->id)
+            ->inRandomOrder()
+            ->limit(3)
+            ->get();
+        return view('front_end.project_detail.index', compact('project', 'relatedProjects'));
     }
 
     public function departmentProject($slug, $uuid)

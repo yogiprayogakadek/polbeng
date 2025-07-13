@@ -50,7 +50,7 @@
                                     </button>
                                 </td>
                                 <td class="text-center">
-                                    <img src="{{ asset('storage/' . $project->thumbnail) }}" width="70"
+                                    <img src="{{ resolveAssetPath($project->thumbnail) }}" width="70"
                                         class="img-thumbnail" />
                                 </td>
                                 <td>{{ $project->project_title }}</td>

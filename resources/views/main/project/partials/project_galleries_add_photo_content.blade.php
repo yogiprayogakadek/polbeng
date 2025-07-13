@@ -26,7 +26,7 @@
     projectDetailId = $('#projectGalleriesModal').data('project-detail-id');
 
     function loadGalleries(projectDetailId) {
-        $.get(`/project/galleries/${projectDetailId}`, function(response) {
+        $.get(`/admin/project/galleries/${projectDetailId}`, function(response) {
             $('#projectGalleriesContent').html(response.html);
             // Re-init GLightbox
             GLightbox({
@@ -58,7 +58,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: `/project/galleries/delete/${id}`,
+                        url: `/admin/project/galleries/delete/${id}`,
                         type: 'DELETE',
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(

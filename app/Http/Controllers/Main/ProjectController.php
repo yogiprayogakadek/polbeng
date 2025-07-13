@@ -13,13 +13,119 @@ use App\Models\ProjectGallery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Yajra\DataTables\Facades\DataTables;
 
 class ProjectController extends Controller
 {
     public function index()
     {
-        $projects = Project::with('projectCategory')->get();
-        return view('main.project.index', compact('projects'));
+        // $projects = Project::with('projectCategory')->get();
+        // return view('main.project.index', compact('projects'));
+
+        return view('main.project.index');
+    }
+
+    public function projectData(Request $request)
+    {
+        if ($request->ajax()) {
+            $projects = Project::with(['projectCategory.studyProgram', 'detail'])
+                ->select('projects.*');
+
+            return DataTables::eloquent($projects)
+                ->addIndexColumn()
+                ->addColumn('thumbnail', function ($project) {
+                    // return '<img src="' . resolveAssetPath($project->thumbnail) . '" width="70" class="img-thumbnail">';
+                    return '<img src="' . asset('storage/' . $project->thumbnail) . '" width="70" class="img-thumbnail">';
+                })
+                ->addColumn('category_name', function ($project) {
+                    return $project->projectCategory->studyProgram->study_program_name . ' - ' . $project->projectCategory->project_category_name;
+                })
+                ->addColumn('project_detail', function ($project) {
+                    return '<button class="btn btn-outline-primary modal-btn"
+                            data-url="' . route('project.detail', $project->id) . '"
+                            data-modal-id="projectDetailModal" data-bs-toggle="tooltip"
+                            data-bs-custom-class="custom-tooltip" data-bs-placement="top"
+                            data-bs-title="Project Detail">
+                            <iconify-icon icon="solar:eye-line-duotone" width="1em"
+                                height="1em"></iconify-icon>
+                        </button>';
+                })
+                ->addColumn('galleries', function ($project) {
+                    if ($project->detail) {
+                        return '<button class="btn btn-outline-primary modal-btn"
+                                data-url="' . route('project.galleries.modal', $project->detail->id) . '"
+                                data-modal-id="projectGalleriesModal" data-bs-toggle="tooltip"
+                                data-bs-custom-class="custom-tooltip" data-bs-placement="top"
+                                data-bs-title="Project Galleries">
+                                <iconify-icon icon="solar:album-line-duotone" width="1em"
+                                    height="1em"></iconify-icon>
+                            </button>';
+                    }
+                    return '-';
+                })
+                ->addColumn('status', function ($project) {
+                    return '<span class="badge text-bg-' . ($project->is_active ? 'primary' : 'warning') . '">' . ($project->is_active ? 'Active' : 'Disabled') . '</span>';
+                })
+                ->addColumn('action', function ($project) {
+                    $toggleBtn = '<button type="button"
+                            class="btn ' . ($project->is_active ? 'bg-primary-subtle' : 'bg-warning-subtle text-warning') . ' btn-toggle-status"
+                            data-id="' . $project->id . '" data-name="' . $project->project_title . '"
+                            data-status="' . ($project->is_active ? 'disable' : 'activate') . '"
+                            data-url="' . route('project.toggleStatus', $project->id) . '"
+                            data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip"
+                            data-bs-placement="top"
+                            data-bs-title="' . ($project->is_active ? 'Disable Project' : 'Activate Project') . '">
+                            <iconify-icon
+                                icon="' . ($project->is_active ? 'solar:bill-cross-bold-duotone' : 'solar:bill-check-bold-duotone') . '"
+                                width="1em" height="1em">
+                            </iconify-icon>
+                        </button>';
+
+                    $editBtn = '<a href="' . route('project.edit', $project->id) . '">
+                            <button class="btn btn-outline-success" data-bs-toggle="tooltip"
+                                data-bs-custom-class="custom-tooltip" data-bs-placement="top"
+                                data-bs-title="Edit">
+                                <iconify-icon icon="solar:clapperboard-edit-linear" width="1em"
+                                    height="1em"></iconify-icon>
+                            </button>
+                        </a>';
+
+                    $deleteBtn = '<button type="button" class="btn bg-danger-subtle text-danger btn-delete"
+                            data-id="' . $project->id . '" data-name="' . $project->project_title . '"
+                            data-url="' . route('project.destroy', $project->id) . '" data-bs-toggle="tooltip"
+                            data-bs-placement="top" data-bs-title="Delete Project">
+                            <iconify-icon icon="solar:trash-bin-trash-bold-duotone" width="1em"
+                                height="1em"></iconify-icon>
+                        </button>';
+
+                    return $toggleBtn . ' ' . $editBtn . ' ' . $deleteBtn;
+                })
+                ->rawColumns(['thumbnail', 'project_detail', 'galleries', 'status', 'action'])
+                ->filterColumn('category_name', function ($query, $keyword) {
+                    $query->whereHas('projectCategory.studyProgram', function ($q) use ($keyword) {
+                        $q->where('study_program_name', 'like', "%{$keyword}%")
+                            ->orWhere('project_category_name', 'like', "%{$keyword}%");
+                    });
+                })
+                ->filterColumn('school_year', function ($query, $keyword) {
+                    $query->where('school_year', 'like', "%{$keyword}%");
+                })
+                ->filterColumn('semester', function ($query, $keyword) {
+                    $query->where('semester', 'like', "%{$keyword}%");
+                })
+                ->filterColumn('project_title', function ($query, $keyword) {
+                    $query->where('project_title', 'like', "%{$keyword}%");
+                })
+                ->filterColumn('status', function ($query, $keyword) {
+                    $status = strtolower($keyword);
+                    if (str_contains($status, 'active')) {
+                        $query->where('is_active', 1);
+                    } elseif (str_contains($status, 'disabled') || str_contains($status, 'inactive')) {
+                        $query->where('is_active', 0);
+                    }
+                })
+                ->make(true);
+        }
     }
 
     public function create()

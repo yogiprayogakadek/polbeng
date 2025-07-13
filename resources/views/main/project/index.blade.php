@@ -10,6 +10,9 @@
     <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.bootstrap5.min.css">
 @endpush
 
 @section('content')
@@ -31,100 +34,22 @@
     <div class="card">
         <div class="card-body">
             <h5 class="card-title fw-semibold mb-4">Project List</h5>
-
-            <div class="table-responsive">
-                <table id="table" class="table table-striped table-bordered text-nowrap align-middle" width="100%">
-                    <thead>
-                        <tr>
-                            <th>Project Thumbnail</th>
-                            <th>Project Title</th>
-                            <th>Category Name</th>
-                            <th>School Year</th>
-                            <th>Semester</th>
-                            <th>Project Detail</th>
-                            <th>Project Galleries</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($projects as $project)
-                            <tr>
-                                <td class="text-center">
-                                    <img src="{{ asset('storage/' . $project->thumbnail) }}" width="70"
-                                        class="img-thumbnail" />
-                                </td>
-                                <td>{{ $project->project_title }}</td>
-                                <td>{{ $project->projectCategory->studyProgram->study_program_name . ' - ' . $project->projectCategory->project_category_name }}
-                                </td>
-                                <td>{{ $project->school_year }}</td>
-                                <td>{{ $project->semester }}</td>
-                                <td class="text-center">
-                                    <button class="btn btn btn-outline-primary modal-btn"
-                                        data-url="{{ route('project.detail', $project->id) }}"
-                                        data-modal-id="projectDetailModal" data-bs-toggle="tooltip"
-                                        data-bs-custom-class="custom-tooltip" data-bs-placement="top"
-                                        data-bs-title="Project Detail">
-                                        <iconify-icon icon="solar:eye-line-duotone" width="1em"
-                                            height="1em"></iconify-icon>
-                                    </button>
-                                </td>
-                                <td class="text-center">
-                                    <button class="btn btn-outline-primary modal-btn"
-                                        data-url="{{ route('project.galleries.modal', $project->detail->id) }}"
-                                        data-modal-id="projectGalleriesModal" data-bs-toggle="tooltip"
-                                        data-bs-custom-class="custom-tooltip" data-bs-placement="top"
-                                        data-bs-title="Project Galleries">
-
-                                        <iconify-icon icon="solar:album-line-duotone" width="1em"
-                                            height="1em"></iconify-icon>
-                                    </button>
-
-                                </td>
-                                <td>
-                                    <span
-                                        class="badge text-bg-{{ $project->is_active == true ? 'primary' : 'warning' }}">{{ $project->is_active == true ? 'Active' : 'Disabled' }}</span>
-                                </td>
-                                <td>
-                                    <button type="button"
-                                        class="btn {{ $project->is_active ? 'bg-primary-subtle' : 'bg-warning-subtle text-warning' }} btn-toggle-status"
-                                        data-id="{{ $project->id }}" data-name="{{ $project->project_title }}"
-                                        data-status="{{ $project->is_active ? 'disable' : 'activate' }}"
-                                        data-url="{{ route('project.toggleStatus', $project->id) }}"
-                                        data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip"
-                                        data-bs-placement="top"
-                                        data-bs-title="{{ $project->is_active ? 'Disable Project' : 'Activate Project' }}">
-
-                                        <iconify-icon
-                                            icon="{{ $project->is_active ? 'solar:bill-cross-bold-duotone' : 'solar:bill-check-bold-duotone' }}"
-                                            width="1em" height="1em">
-                                        </iconify-icon>
-                                    </button>
-
-                                    <a href="{{ route('project.edit', $project->id) }}">
-                                        <button class="btn btn-outline-success" data-bs-toggle="tooltip"
-                                            data-bs-custom-class="custom-tooltip" data-bs-placement="top"
-                                            data-bs-title="Edit">
-                                            <iconify-icon icon="solar:clapperboard-edit-linear" width="1em"
-                                                height="1em"></iconify-icon>
-                                        </button>
-                                    </a>
-
-                                    <button type="button" class="btn bg-danger-subtle text-danger btn-delete"
-                                        data-id="{{ $project->id }}" data-name="{{ $project->project_title }}"
-                                        data-url="{{ route('project.destroy', $project->id) }}" data-bs-toggle="tooltip"
-                                        data-bs-placement="top" data-bs-title="Delete Project">
-                                        <iconify-icon icon="solar:trash-bin-trash-bold-duotone" width="1em"
-                                            height="1em"></iconify-icon>
-                                    </button>
-
-
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+            <table id="table" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+                <thead>
+                    <tr>
+                        <th data-priority="1">Thumbnail</th>
+                        <th data-priority="1">Project Title</th>
+                        <th>Category</th>
+                        <th data-priority="2">School Year</th>
+                        <th>Semester</th>
+                        <th>Detail</th>
+                        <th>Galleries</th>
+                        <th data-priority="3">Status</th>
+                        <th data-priority="1">Action</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
 
         </div>
     </div>
@@ -133,12 +58,67 @@
 @push('script')
     <script src="https://bootstrapdemos.adminmart.com/matdash/dist/assets/libs/datatables.net/js/jquery.dataTables.min.js">
     </script>
-    {{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
-
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.4.1/js/responsive.bootstrap5.min.js"></script>
     <script>
-        $("#table").DataTable({
-            scrollX: true,
-            scrollY: false
+        var table = $('#table').DataTable({
+            processing: true,
+            serverSide: true,
+            responsive: true,
+            ajax: "{{ route('project.data') }}",
+            columns: [{
+                    data: 'thumbnail',
+                    name: 'thumbnail',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'project_title',
+                    name: 'project_title'
+                },
+                {
+                    data: 'category_name',
+                    name: 'category_name',
+                    orderable: false
+                },
+                {
+                    data: 'school_year',
+                    name: 'school_year'
+                },
+                {
+                    data: 'semester',
+                    name: 'semester'
+                },
+                {
+                    data: 'project_detail',
+                    name: 'project_detail',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'galleries',
+                    name: 'galleries',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'status',
+                    name: 'is_active'
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
+                    searchable: false
+                }
+            ],
+            responsive: true,
+            initComplete: function() {
+                // Inisialisasi tooltip setelah tabel selesai dimuat
+                $('[data-bs-toggle="tooltip"]').tooltip();
+            }
         });
 
         $(document).on('click', '.btn-toggle-status', function(e) {
