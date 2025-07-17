@@ -14,5 +14,7 @@
     <!-- Owl Carousel  -->
     <link rel="stylesheet" href="{{ asset('assets/css/owl.carousel.min.css') }}" />
 
+    @laravelPWA
+
     @stack('css')
 </head>

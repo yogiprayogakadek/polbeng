@@ -3,10 +3,7 @@
 @section('page-title', 'Dashboard')
 
 @push('css')
-    {{-- Library untuk select dropdown yang lebih canggih --}}
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    {{-- Library untuk animasi saat scroll/load --}}
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -16,22 +13,12 @@
             --danger: #ef4444;
             --purple: #6366f1;
             --pink: #ec4899;
-            --light-gray: #f8f9fa;
-            --text-dark: #343a40;
-            --text-muted: #6c757d;
-        }
-
-        body {
-            background-color: var(--light-gray);
         }
 
         .card {
+            transition: all 0.3s ease;
             border: none;
-            border-radius: 1rem;
-            /* Sudut lebih bulat */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease-in-out;
-            background: #fff;
+            background-color: #fff;
         }
 
         .card:hover {
@@ -39,16 +26,8 @@
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
 
-        /* Gradien halus untuk latar belakang card header */
-        .card .card-header {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, var(--light-gray) 100%);
-            border-bottom: none;
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-
         .chart-container {
-            height: 320px;
+            height: 300px;
             position: relative;
         }
 
@@ -65,10 +44,9 @@
             left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
-            color: var(--text-muted);
+            color: #6c757d;
         }
 
-        /* Efek transisi untuk kemunculan canvas */
         canvas {
             opacity: 0;
             transition: opacity 0.5s ease;
@@ -78,23 +56,13 @@
             opacity: 1;
         }
 
-        /* Styling untuk filter */
         .filter-card {
-            background: #ffffff;
-        }
-
-        .table-responsive {
-            border-radius: 0.5rem;
-        }
-
-        thead {
-            background-color: var(--primary);
-            color: white;
+            margin-bottom: 1.5rem;
         }
 
         @media (max-width: 768px) {
             .chart-container {
-                height: 280px;
+                height: 250px;
             }
         }
     </style>
@@ -102,112 +70,135 @@
 
 @section('content')
     <div class="row g-4 mb-4">
-        {{-- Statistik Utama (jika ada) --}}
         @include('main.dashboard.partials.stats')
     </div>
 
-    <div class="row g-4 mb-4" data-aos="fade-up">
+    <!-- Unified Filter Section -->
+    <div class="row g-4 mb-4">
         <div class="col-12">
-            <div class="card p-3 filter-card">
-                <div class="d-flex flex-column flex-md-row flex-wrap gap-3 align-items-center">
-                    <div class="flex-grow-1">
-                        <label for="yearFilter" class="form-label fw-semibold">Tahun</label>
+            <div class="card p-3 shadow-sm rounded-4 filter-card">
+                <div class="d-flex flex-wrap gap-3 align-items-center">
+                    <div>
+                        <label class="form-label">Year</label>
                         <select id="yearFilter" class="form-select">
-                            <option value="">Semua Tahun</option>
+                            <option value="">All Years</option>
                             @foreach ($projectsPerYear->keys() as $year)
                                 <option value="{{ $year }}">{{ $year }}</option>
                             @endforeach
                         </select>
                     </div>
-                    <div class="flex-grow-1">
-                        <label for="categoryFilter" class="form-label fw-semibold">Kategori</label>
-                        <select id="categoryFilter" class="form-select">
-                            <option value="">Semua Kategori</option>
+                    <div>
+                        <label class="form-label">Category</label>
+                        <select id="filterCategory" class="form-select">
+                            <option value="">All Categories</option>
                             @foreach ($projectsPerCategory as $category)
                                 <option value="{{ $category->project_category_name }}">
-                                    {{ $category->project_category_name }}
-                                </option>
+                                    {{ $category->project_category_name }}</option>
                             @endforeach
                         </select>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="row g-4">
-        <div class="col-xl-6" data-aos="fade-up" data-aos-delay="100">
-            <div class="card p-3 h-100">
-                <h5 class="fw-semibold mb-3 d-flex align-items-center gap-2">
-                    <i class="ti ti-calendar-event"></i> Proyek per Tahun
-                </h5>
+        <!-- Projects Per Year Chart -->
+        <div class="col-xl-6">
+            <div class="card p-3 shadow-sm rounded-4 h-100">
+                <h5 class="fw-semibold mb-3">Projects Per Year</h5>
                 <div class="chart-container">
                     <div id="projectsPerYearLoader" class="chart-loader">
                         <div class="spinner-border text-primary" role="status"></div>
                     </div>
                     <canvas id="projectsPerYearChart"></canvas>
                     <div id="projectsPerYearEmpty" class="chart-empty" style="display:none;">
-                        <i class="ti ti-chart-bar-off fs-1"></i>
-                        <p class="mt-2">Data tidak ditemukan</p>
+                        <i class="ti ti-alert-circle fs-4"></i>
+                        <p class="mt-2">No data available</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-6" data-aos="fade-up" data-aos-delay="200">
-            <div class="card p-3 h-100">
-                <h5 class="fw-semibold mb-3 d-flex align-items-center gap-2">
-                    <i class="ti ti-layout-grid"></i> Proyek per Kategori
-                </h5>
+        <!-- Projects Per Category Chart -->
+        <div class="col-xl-6">
+            <div class="card p-3 shadow-sm rounded-4 h-100">
+                <h5 class="fw-semibold mb-3">Projects Per Category</h5>
                 <div class="chart-container">
                     <div id="projectsPerCategoryLoader" class="chart-loader">
                         <div class="spinner-border text-primary" role="status"></div>
                     </div>
                     <canvas id="projectsPerCategoryChart"></canvas>
                     <div id="projectsPerCategoryEmpty" class="chart-empty" style="display:none;">
-                        <i class="ti ti-chart-pie-off fs-1"></i>
-                        <p class="mt-2">Data tidak ditemukan</p>
+                        <i class="ti ti-alert-circle fs-4"></i>
+                        <p class="mt-2">No data available</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-12" data-aos="fade-up" data-aos-delay="300">
-            <div class="card p-3 mt-4">
-                <h5 class="fw-semibold mb-3 d-flex align-items-center gap-2">
-                    <i class="ti ti-trending-up"></i> Tren Proyek
-                </h5>
+        <!-- Projects Trend Chart -->
+        <div class="col-12">
+            <div class="card p-3 shadow-sm rounded-4 mt-4">
+                <h5 class="fw-semibold mb-3">Projects Trend Over Years</h5>
                 <div class="chart-container">
                     <div id="projectsTrendLoader" class="chart-loader">
                         <div class="spinner-border text-primary" role="status"></div>
                     </div>
                     <canvas id="projectsTrendChart"></canvas>
                     <div id="projectsTrendEmpty" class="chart-empty" style="display:none;">
-                        <i class="ti ti-chart-line-off fs-1"></i>
-                        <p class="mt-2">Data tidak ditemukan</p>
+                        <i class="ti ti-alert-circle fs-4"></i>
+                        <p class="mt-2">No data available</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="card p-4 mt-4" data-aos="fade-up" data-aos-delay="400">
-        <h5 class="fw-semibold mb-3 d-flex align-items-center gap-2">
-            <i class="ti ti-list-details"></i> Daftar Proyek Terbaru
-        </h5>
+    <!-- Recent Projects Table -->
+    <div class="card p-4 shadow rounded-4 mt-4">
+        <div class="d-flex flex-wrap gap-3 align-items-center mb-3">
+            <div>
+                <label class="form-label">Year</label>
+                <select id="recentYearFilter" class="form-select">
+                    <option value="">All Years</option>
+                    @foreach ($projectsPerYear->keys() as $year)
+                        <option value="{{ $year }}">{{ $year }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label class="form-label">Category</label>
+                <select id="recentCategoryFilter" class="form-select">
+                    <option value="">All Categories</option>
+                    @foreach ($projectsPerCategory as $category)
+                        <option value="{{ $category->project_category_name }}">{{ $category->project_category_name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+
+        <h5 class="fw-semibold mb-3">Recent Projects</h5>
         <div class="table-responsive">
-            <table class="table table-hover align-middle" id="recentProjectsTable">
+            <table class="table" id="recentProjectsTable">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Judul Proyek</th>
-                        <th>Kategori</th>
-                        <th>Tahun Ajaran</th>
+                        <th>Project Title</th>
+                        <th>Category</th>
+                        <th>School Year</th>
                         <th>Semester</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {{-- Konten tabel akan diisi oleh AJAX --}}
+                    @foreach ($recentProjects as $index => $project)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $project->project_title }}</td>
+                            <td>{{ $project->projectCategory->project_category_name ?? '-' }}</td>
+                            <td>{{ $project->school_year }}</td>
+                            <td><span class="badge bg-primary">{{ $project->semester }}</span></td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
@@ -216,15 +207,12 @@
 
 @push('script')
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <script>
         $(document).ready(function() {
-            // Inisialisasi semua komponen dasbor
+            // Initialize dashboard
             initDashboard();
 
-            // Atur sidebar jika diperlukan
+            // Initialize sidebar (if needed)
             setTimeout(() => {
                 $('[id^="mini-"]').removeClass('selected');
                 $('#dashboard').addClass('selected');
@@ -233,79 +221,87 @@
             }, 1000);
         });
 
-        // Objek untuk menyimpan instance Chart.js
+        // Global chart instances
         const charts = {
             perYear: null,
             perCategory: null,
             trend: null
         };
 
-        // Skema warna untuk grafik
+        // Color schemes for different charts
         const chartColorSchemes = {
             perYear: {
                 background: 'rgba(59, 130, 246, 0.8)',
                 border: '#3b82f6'
             },
-            perCategory: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#6366f1', '#ec4899'],
+            perCategory: [
+                '#3b82f6', '#10b981', '#f59e0b',
+                '#ef4444', '#6366f1', '#ec4899'
+            ],
             trend: {
                 line: '#3b82f6',
-                fill: 'rgba(59, 130, 246, 0.1)',
+                fill: 'rgba(59, 130, 246, 0.2)',
                 point: '#3b82f6'
             }
         };
 
-        // Fungsi utama untuk inisialisasi
+        // Initialize all dashboard components
         function initDashboard() {
-            // Inisialisasi AOS (Animate On Scroll)
-            AOS.init({
-                duration: 800,
-                once: true
-            });
-
-            // Inisialisasi Select2
+            // Initialize Select2
             $('.form-select').select2({
                 width: '100%',
                 minimumResultsForSearch: 10
             });
 
-            // Muat data awal untuk semua komponen
-            updateDashboard();
+            // Load initial charts
+            loadProjectsPerYearChart();
+            loadProjectsPerCategoryChart();
+            loadProjectsTrend();
 
-            // Atur event listener untuk filter
-            $('#yearFilter, #categoryFilter').on('change', function() {
-                updateDashboard();
+            // Setup filter event handlers
+            setupFilterHandlers();
+        }
+
+        // Setup filter event handlers
+        function setupFilterHandlers() {
+            // Unified filter handler for charts
+            $('#yearFilter, #filterCategory').on('change', function() {
+                const year = $('#yearFilter').val();
+                const category = $('#filterCategory').val();
+
+                loadProjectsPerYearChart(year);
+                loadProjectsPerCategoryChart(category);
+                loadProjectsTrend(year);
+            });
+
+            // Filter handler for recent projects table
+            $('#recentYearFilter, #recentCategoryFilter').on('change', function() {
+                const year = $('#recentYearFilter').val();
+                const category = $('#recentCategoryFilter').val();
+                filterRecentProjects(year, category);
             });
         }
 
-        // Fungsi terpusat untuk memuat/memperbarui semua data dasbor
-        function updateDashboard() {
-            const year = $('#yearFilter').val();
-            const category = $('#categoryFilter').val();
-
-            loadProjectsPerYearChart(year);
-            loadProjectsPerCategoryChart(category, year); // Tambahkan filter tahun di sini
-            loadProjectsTrend(year);
-            filterRecentProjects(year, category);
-        }
-
-        // --- FUNGSI-FUNGSI AJAX UNTUK MEMUAT DATA ---
-
+        // Load Projects Per Year Chart (Blue)
         function loadProjectsPerYearChart(year = '') {
             showLoader('projectsPerYear');
+
             $.ajax({
                 url: "{{ route('dashboard.projectsPerYear') }}",
+                type: "GET",
                 data: {
-                    year
+                    year: year
                 },
-                success: response => {
+                success: function(response) {
                     if (charts.perYear) charts.perYear.destroy();
+
                     const ctx = document.getElementById('projectsPerYearChart').getContext('2d');
                     charts.perYear = new Chart(ctx, {
                         type: 'bar',
                         data: {
                             labels: response.labels,
                             datasets: [{
-                                label: 'Total Proyek',
+                                label: 'Projects',
                                 data: response.data,
                                 backgroundColor: chartColorSchemes.perYear.background,
                                 borderColor: chartColorSchemes.perYear.border,
@@ -315,66 +311,77 @@
                         },
                         options: getChartOptions('bar')
                     });
+
                     handleChartResponse('projectsPerYear', response.data.length > 0);
                 },
-                error: () => showError('Gagal memuat data Proyek per Tahun.')
+                error: function() {
+                    showError('Failed to load projects per year data');
+                    hideLoader('projectsPerYear');
+                }
             });
         }
 
-        function loadProjectsPerCategoryChart(category = '', year = '') {
+        // Load Projects Per Category Chart (Multi-color)
+        function loadProjectsPerCategoryChart(category = '') {
             showLoader('projectsPerCategory');
+
             $.ajax({
                 url: "{{ route('dashboard.projectsPerCategory') }}",
+                type: "GET",
                 data: {
-                    category,
-                    year
-                }, // Kirim filter tahun juga
-                success: response => {
+                    category: category
+                },
+                success: function(response) {
                     if (charts.perCategory) charts.perCategory.destroy();
+
                     const ctx = document.getElementById('projectsPerCategoryChart').getContext('2d');
                     charts.perCategory = new Chart(ctx, {
-                        type: 'doughnut', // Ganti ke doughnut untuk tampilan lebih modern
+                        type: 'pie',
                         data: {
                             labels: response.labels,
                             datasets: [{
                                 data: response.data,
                                 backgroundColor: chartColorSchemes.perCategory,
                                 borderColor: '#fff',
-                                borderWidth: 2
+                                borderWidth: 1
                             }]
                         },
-                        options: getChartOptions('doughnut')
+                        options: getChartOptions('pie')
                     });
+
                     handleChartResponse('projectsPerCategory', response.data.length > 0);
                 },
-                error: () => showError('Gagal memuat data Proyek per Kategori.')
+                error: function() {
+                    showError('Failed to load projects per category data');
+                    hideLoader('projectsPerCategory');
+                }
             });
         }
 
+        // Load Projects Trend Chart (Blue with gradient)
         function loadProjectsTrend(year = '') {
             showLoader('projectsTrend');
+
             $.ajax({
                 url: "{{ route('dashboard.projectsTrend') }}",
+                type: "GET",
                 data: {
-                    year
+                    year: year
                 },
-                success: response => {
+                success: function(response) {
                     if (charts.trend) charts.trend.destroy();
-                    const ctx = document.getElementById('projectsTrendChart').getContext('2d');
-                    const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-                    gradient.addColorStop(0, 'rgba(59, 130, 246, 0.3)');
-                    gradient.addColorStop(1, 'rgba(59, 130, 246, 0)');
 
+                    const ctx = document.getElementById('projectsTrendChart').getContext('2d');
                     charts.trend = new Chart(ctx, {
                         type: 'line',
                         data: {
                             labels: response.labels,
                             datasets: [{
-                                label: 'Tren Proyek',
+                                label: 'Projects',
                                 data: response.data,
                                 borderColor: chartColorSchemes.trend.line,
-                                backgroundColor: gradient, // Gunakan gradien
-                                tension: 0.4, // Garis lebih melengkung
+                                backgroundColor: chartColorSchemes.trend.fill,
+                                tension: 0.3,
                                 fill: true,
                                 pointRadius: 4,
                                 pointBackgroundColor: chartColorSchemes.trend.point,
@@ -383,109 +390,83 @@
                         },
                         options: getChartOptions('line')
                     });
+
                     handleChartResponse('projectsTrend', response.data.length > 0);
                 },
-                error: () => showError('Gagal memuat data Tren Proyek.')
-            });
-        }
-
-        function filterRecentProjects(year = '', category = '') {
-            // Tampilkan loader sederhana di tabel
-            $('#recentProjectsTable tbody').html(
-                '<tr><td colspan="5" class="text-center"><div class="spinner-border spinner-border-sm"></div> Memuat...</td></tr>'
-                );
-            $.ajax({
-                url: "{{ route('dashboard.recentProjects') }}",
-                data: {
-                    year,
-                    category
-                },
-                success: response => {
-                    $('#recentProjectsTable tbody').html(response.html);
-                    if (!response.html.trim()) {
-                        $('#recentProjectsTable tbody').html(
-                            '<tr><td colspan="5" class="text-center">Data tidak ditemukan.</td></tr>');
-                    }
-                },
-                error: () => {
-                    $('#recentProjectsTable tbody').html(
-                        '<tr><td colspan="5" class="text-center text-danger">Gagal memuat data.</td></tr>');
-                    showError('Gagal memuat daftar proyek terbaru.');
+                error: function() {
+                    showError('Failed to load projects trend data');
+                    hideLoader('projectsTrend');
                 }
             });
         }
 
-        // --- FUNGSI-FUNGSI PEMBANTU (HELPERS) ---
+        // Filter Recent Projects Table
+        function filterRecentProjects(year = '', category = '') {
+            $.ajax({
+                url: "{{ route('dashboard.recentProjects') }}",
+                type: "GET",
+                data: {
+                    year: year,
+                    category: category
+                },
+                success: function(response) {
+                    $('#recentProjectsTable tbody').html(response.html);
+                    showToast('Data loaded successfully', 'success');
+                },
+                error: function() {
+                    showError('Failed to load recent projects');
+                }
+            });
+        }
 
+        // Helper function to get chart options
         function getChartOptions(type) {
-            const options = {
+            const commonOptions = {
                 responsive: true,
                 maintainAspectRatio: false,
-                animation: {
-                    duration: 1000
-                },
                 plugins: {
                     legend: {
-                        position: (type === 'doughnut' || type === 'pie') ? 'bottom' : 'top',
+                        position: type === 'pie' ? 'bottom' : 'top',
                         labels: {
-                            color: '#333',
+                            color: '#000000',
                             font: {
-                                weight: '500'
-                            }
-                        }
-                    },
-                    tooltip: {
-                        enabled: true,
-                        backgroundColor: 'rgba(0,0,0,0.8)',
-                        titleFont: {
-                            size: 14,
-                            weight: 'bold'
-                        },
-                        bodyFont: {
-                            size: 12
-                        },
-                        padding: 10,
-                        cornerRadius: 8,
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || context.label || '';
-                                if (label) label += ': ';
-                                if (context.parsed.y !== null) label += context.parsed.y;
-                                else if (context.parsed !== null) label += context.parsed;
-                                return ' ' + label;
+                                weight: 'bold'
                             }
                         }
                     }
                 },
-                scales: (type === 'bar' || type === 'line') ? {
+                scales: {
                     y: {
                         beginAtZero: true,
                         grid: {
-                            color: 'rgba(0,0,0,0.05)'
+                            color: 'rgba(0, 0, 0, 0.1)'
                         },
                         ticks: {
-                            color: '#666'
+                            color: '#000000'
                         }
                     },
                     x: {
                         grid: {
-                            display: false
+                            color: 'rgba(0, 0, 0, 0.1)'
                         },
                         ticks: {
-                            color: '#666'
+                            color: '#000000'
                         }
                     }
-                } : {}
+                }
             };
-            return options;
+
+            return commonOptions;
         }
 
+        // Helper function to show loader
         function showLoader(chartId) {
             $(`#${chartId}Loader`).show();
-            $(`#${chartId}Chart`).removeClass('show').hide();
+            $(`#${chartId}Chart`).hide();
             $(`#${chartId}Empty`).hide();
         }
 
+        // Helper function to hide loader and show chart/empty state
         function handleChartResponse(chartId, hasData) {
             $(`#${chartId}Loader`).hide();
             if (hasData) {
@@ -497,12 +478,35 @@
             }
         }
 
+        // Helper function to show error message
         function showError(message) {
             Swal.fire({
-                title: 'Error!',
+                title: 'Error',
                 text: message,
                 icon: 'error',
                 confirmButtonColor: '#3b82f6'
+            });
+        }
+
+        // Helper function to show toast
+        function showToast(message, type = 'success') {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer);
+                    toast.addEventListener('mouseleave', Swal.resumeTimer);
+                }
+            });
+
+            Toast.fire({
+                icon: type,
+                title: message,
+                background: '#fff',
+                color: '#000'
             });
         }
     </script>
