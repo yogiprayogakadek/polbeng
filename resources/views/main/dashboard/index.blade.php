@@ -224,13 +224,13 @@
             // Inisialisasi semua komponen dasbor
             initDashboard();
 
-            // Atur sidebar jika diperlukan
-            setTimeout(() => {
-                $('[id^="mini-"]').removeClass('selected');
-                $('#dashboard').addClass('selected');
-                $('body').attr('data-sidebartype', 'mini-sidebar');
-                $('.container-fluid').css('max-width', '1500px');
-            }, 1000);
+            // Atur sidebar jika diperlukan (Dihapus karena menyebabkan konflik dengan role-based menu)
+            // setTimeout(() => {
+            //     $('[id^="mini-"]').removeClass('selected');
+            //     $('#dashboard').addClass('selected');
+            //     $('body').attr('data-sidebartype', 'mini-sidebar');
+            //     $('.container-fluid').css('max-width', '1500px');
+            // }, 1000);
         });
 
         // Objek untuk menyimpan instance Chart.js
@@ -317,7 +317,9 @@
                     });
                     handleChartResponse('projectsPerYear', response.data.length > 0);
                 },
-                error: () => showError('Gagal memuat data Proyek per Tahun.')
+                error: (xhr) => {
+                    if (xhr.status !== 0) showError('Gagal memuat data Proyek per Tahun.');
+                }
             });
         }
 
@@ -347,7 +349,9 @@
                     });
                     handleChartResponse('projectsPerCategory', response.data.length > 0);
                 },
-                error: () => showError('Gagal memuat data Proyek per Kategori.')
+                error: (xhr) => {
+                    if (xhr.status !== 0) showError('Gagal memuat data Proyek per Kategori.');
+                }
             });
         }
 
@@ -385,7 +389,9 @@
                     });
                     handleChartResponse('projectsTrend', response.data.length > 0);
                 },
-                error: () => showError('Gagal memuat data Tren Proyek.')
+                error: (xhr) => {
+                    if (xhr.status !== 0) showError('Gagal memuat data Tren Proyek.');
+                }
             });
         }
 
@@ -407,10 +413,12 @@
                             '<tr><td colspan="5" class="text-center">Data tidak ditemukan.</td></tr>');
                     }
                 },
-                error: () => {
-                    $('#recentProjectsTable tbody').html(
-                        '<tr><td colspan="5" class="text-center text-danger">Gagal memuat data.</td></tr>');
-                    showError('Gagal memuat daftar proyek terbaru.');
+                error: (xhr) => {
+                    if (xhr.status !== 0) {
+                        $('#recentProjectsTable tbody').html(
+                            '<tr><td colspan="5" class="text-center text-danger">Gagal memuat data.</td></tr>');
+                        showError('Gagal memuat daftar proyek terbaru.');
+                    }
                 }
             });
         }

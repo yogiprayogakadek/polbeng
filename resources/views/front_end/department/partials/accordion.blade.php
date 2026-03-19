@@ -1,53 +1,44 @@
 @php
-    $colors = ['primary', 'secondary', 'dark', 'indigo'];
-    $icons = ['bell', 'rocket', 'bulb', 'device-desktop', 'layers', 'chart-bar'];
+    $colors = ['blue', 'indigo', 'purple', 'primary'];
 @endphp
 
-<div class="row align-items-center py-3 px-4">
+<div class="row g-4 py-3">
     @forelse ($totalProjects as $totalProject)
-        <div class="col-lg-3 col-md-6 pt-3">
+        <div class="col-lg-3 col-md-4 col-sm-6">
             @php
-                $color = $colors[array_rand($colors)];
-                $icon = $icons[array_rand($icons)];
+                $color = $colors[$loop->index % count($colors)];
             @endphp
-            <div class="card border-start border-{{ $color }} border-3 h-100 hover-scale">
-                <div class="card-body d-flex flex-column">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="bg-{{ $color }} bg-opacity-10 p-3 rounded-circle me-3">
-                            <i class="ti ti-{{ $icon }} fs-4 text-{{ $color }}"></i>
-                        </div>
-                        <div>
-                            <h3 class="fs-2 fw-bold mb-0">{{ $totalProject->total }}</h3>
-                            <span class="text-muted small">Total Projects</span>
-                        </div>
+            <div class="category-card-small shadow-sm h-100 animate__animated animate__fadeInUp"
+                style="animation-delay: {{ $loop->index * 0.05 }}s">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="icon-box rounded-4 d-flex align-items-center justify-content-center me-3"
+                        style="width: 54px; height: 54px; background-color: rgba(59, 130, 246, 0.1);">
+                        <i class="ti ti-layers-intersect fs-3 text-primary"></i>
                     </div>
-                    <h4 class="fw-semibold text-{{ $color }} mb-3">{{ $totalProject->project_category_name }}</h4>
-                    <div class="progress mt-2" style="height: 6px;">
-                        <div class="progress-bar bg-{{ $color }}" role="progressbar"
-                            style="width: {{ min(100, $totalProject->total) }}%">
-                        </div>
+                    <div>
+                        <h3 class="fs-2 fw-bold mb-0 text-dark">{{ $totalProject->total }}</h3>
+                        <span class="text-muted small">Projects</span>
                     </div>
-                    <div class="mt-auto pt-3">
-                        <a href="{{ route('frontend.project.index', $totalProject->uuid) }}"
-                            class="btn btn-sm btn-{{ $color }} stretched-link">
-                            View Details <i class="ti ti-arrow-right ms-1"></i>
-                        </a>
-                    </div>
+                </div>
+
+                <h4 class="fs-6 fw-bold text-dark mb-4 lh-base" style="min-height: 2.5rem;">
+                    {{ $totalProject->project_category_name }}
+                </h4>
+
+                <div class="mt-auto">
+                    <a href="{{ route('frontend.project.index', $totalProject->uuid) }}"
+                        class="btn btn-outline-primary w-100 rounded-pill py-2 fw-bold d-flex align-items-center justify-content-center">
+                        View Discovery <i class="ti ti-arrow-right ms-2"></i>
+                    </a>
                 </div>
             </div>
         </div>
     @empty
         <div class="col-12">
-            <div class="card border-0 bg-light">
-                <div class="card-body text-center py-5">
-                    <img src="{{ asset('assets/images/empty-state.svg') }}" alt="No projects" class="img-fluid mb-4"
-                        style="max-width: 200px;">
-                    <h4 class="text-muted mb-3">No projects found</h4>
-                    <p class="text-muted mb-4">There are currently no projects available in this category.</p>
-                    <a href="#" class="btn btn-primary">
-                        <i class="ti ti-plus me-1"></i> Create New Project
-                    </a>
-                </div>
+            <div class="text-center py-5 bg-light rounded-5 animate__animated animate__fadeIn">
+                <i class="ti ti-folder-off fs-1 text-muted opacity-50 mb-3 d-block"></i>
+                <h5 class="text-dark fw-bold mb-1">No Categories Found</h5>
+                <p class="text-muted small">There are currently no categorised projects in this program.</p>
             </div>
         </div>
     @endforelse

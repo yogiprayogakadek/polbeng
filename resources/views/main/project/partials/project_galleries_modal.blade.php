@@ -46,7 +46,6 @@
 
 <script>
     $(document).ready(function() {
-        $('[data-bs-toggle="tooltip"]').tooltip();
         const lightbox = GLightbox({
             selector: '.glightbox',
             touchNavigation: true,

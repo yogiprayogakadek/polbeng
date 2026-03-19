@@ -10,6 +10,7 @@ use App\Models\Project;
 use App\Models\ProjectCategory;
 use App\Models\ProjectDetail;
 use App\Models\ProjectGallery;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -64,43 +65,59 @@ class ProjectController extends Controller
                     return '-';
                 })
                 ->addColumn('status', function ($project) {
-                    return '<span class="badge text-bg-' . ($project->is_active ? 'primary' : 'warning') . '">' . ($project->is_active ? 'Active' : 'Disabled') . '</span>';
-                })
-                ->addColumn('action', function ($project) {
-                    $toggleBtn = '<button type="button"
-                            class="btn ' . ($project->is_active ? 'bg-primary-subtle' : 'bg-warning-subtle text-warning') . ' btn-toggle-status"
-                            data-id="' . $project->id . '" data-name="' . $project->project_title . '"
-                            data-status="' . ($project->is_active ? 'disable' : 'activate') . '"
-                            data-url="' . route('project.toggleStatus', $project->id) . '"
-                            data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip"
-                            data-bs-placement="top"
-                            data-bs-title="' . ($project->is_active ? 'Disable Project' : 'Activate Project') . '">
-                            <iconify-icon
-                                icon="' . ($project->is_active ? 'solar:bill-cross-bold-duotone' : 'solar:bill-check-bold-duotone') . '"
-                                width="1em" height="1em">
-                            </iconify-icon>
-                        </button>';
+                return '<span class="badge text-bg-' . ($project->is_active ? 'primary' : 'warning') . '">' . ($project->is_active ? 'Active' : 'Disabled') . '</span>';
+            })
+            ->addColumn('kaprodi_status', function ($project) {
+                if ($project->status === Project::STATUS_APPROVED) {
+                    return '<span class="badge bg-success-subtle text-success">Approved</span>';
+                } elseif ($project->status === Project::STATUS_REJECTED_KAPRODI) {
+                    return '<span class="badge bg-danger-subtle text-danger">Rejected</span>';
+                }
+                return '<span class="badge bg-warning-subtle text-warning">Waiting</span>';
+            })
+            ->addColumn('dosen_status', function ($project) {
+                if ($project->status === Project::STATUS_PENDING) {
+                    return '<span class="badge bg-warning-subtle text-warning">Pending</span>';
+                } elseif ($project->status === Project::STATUS_REJECTED_DOSEN) {
+                    return '<span class="badge bg-danger-subtle text-danger">Rejected</span>';
+                }
+                return '<span class="badge bg-success-subtle text-success">Verified</span>';
+            })
+            ->addColumn('action', function ($project) {
+                $toggleBtn = '<button type="button"
+                        class="btn ' . ($project->is_active ? 'bg-primary-subtle' : 'bg-warning-subtle text-warning') . ' btn-toggle-status"
+                        data-id="' . $project->id . '" data-name="' . $project->project_title . '"
+                        data-status="' . ($project->is_active ? 'disable' : 'activate') . '"
+                        data-url="' . route('project.toggleStatus', $project->id) . '"
+                        data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip"
+                        data-bs-placement="top"
+                        data-bs-title="' . ($project->is_active ? 'Disable Project' : 'Activate Project') . '">
+                        <iconify-icon
+                            icon="' . ($project->is_active ? 'solar:bill-cross-bold-duotone' : 'solar:bill-check-bold-duotone') . '"
+                            width="1em" height="1em">
+                        </iconify-icon>
+                    </button>';
 
-                    $editBtn = '<a href="' . route('project.edit', $project->id) . '">
-                            <button class="btn btn-outline-success" data-bs-toggle="tooltip"
-                                data-bs-custom-class="custom-tooltip" data-bs-placement="top"
-                                data-bs-title="Edit">
-                                <iconify-icon icon="solar:clapperboard-edit-linear" width="1em"
-                                    height="1em"></iconify-icon>
-                            </button>
-                        </a>';
-
-                    $deleteBtn = '<button type="button" class="btn bg-danger-subtle text-danger btn-delete"
-                            data-id="' . $project->id . '" data-name="' . $project->project_title . '"
-                            data-url="' . route('project.destroy', $project->id) . '" data-bs-toggle="tooltip"
-                            data-bs-placement="top" data-bs-title="Delete Project">
-                            <iconify-icon icon="solar:trash-bin-trash-bold-duotone" width="1em"
+                $editBtn = '<a href="' . route('project.edit', $project->id) . '">
+                        <button class="btn btn-outline-success" data-bs-toggle="tooltip"
+                            data-bs-custom-class="custom-tooltip" data-bs-placement="top"
+                            data-bs-title="Edit">
+                            <iconify-icon icon="solar:clapperboard-edit-linear" width="1em"
                                 height="1em"></iconify-icon>
-                        </button>';
+                        </button>
+                    </a>';
 
-                    return $toggleBtn . ' ' . $editBtn . ' ' . $deleteBtn;
-                })
-                ->rawColumns(['thumbnail', 'project_detail', 'galleries', 'status', 'action'])
+                $deleteBtn = '<button type="button" class="btn bg-danger-subtle text-danger btn-delete"
+                        data-id="' . $project->id . '" data-name="' . $project->project_title . '"
+                        data-url="' . route('project.destroy', $project->id) . '" data-bs-toggle="tooltip"
+                        data-bs-placement="top" data-bs-title="Delete Project">
+                        <iconify-icon icon="solar:trash-bin-trash-bold-duotone" width="1em"
+                            height="1em"></iconify-icon>
+                    </button>';
+
+                return $toggleBtn . ' ' . $editBtn . ' ' . $deleteBtn;
+            })
+            ->rawColumns(['thumbnail', 'project_detail', 'galleries', 'status', 'action', 'kaprodi_status', 'dosen_status'])
                 ->filterColumn('category_name', function ($query, $keyword) {
                     $query->whereHas('projectCategory.studyProgram', function ($q) use ($keyword) {
                         $q->where('study_program_name', 'like', "%{$keyword}%")
@@ -131,10 +148,11 @@ class ProjectController extends Controller
     public function create()
     {
         $projectCategories = ProjectCategory::pluck('project_category_name', 'id')->prepend('Choose...', '');
+        $dosens = User::where('role', User::ROLE_DOSEN)->pluck('name', 'id')->prepend('Choose Dosen Pembimbing...', '');
         $years = array_reverse(range(2010, date('Y')));
         $semester = ['Ganjil', 'Genap'];
 
-        return view('main.project.create', compact('projectCategories', 'years', 'semester'));
+        return view('main.project.create', compact('projectCategories', 'years', 'semester', 'dosens'));
     }
 
     public function store(ProjectStoreRequest $request)
@@ -147,10 +165,11 @@ class ProjectController extends Controller
         try {
             $projectData = [
                 'project_category_id' => $data['project_category_id'],
+                'dosen_pembimbing_id' => $data['dosen_pembimbing_id'],
                 'project_title' => $data['project_title'],
                 'school_year' => $data['school_year'],
                 'semester' => $data['semester'],
-                'thumbnail' => $data['thumbnail'],
+                'status' => Project::STATUS_PENDING,
             ];
 
             // check if project has thumbnail
@@ -356,10 +375,11 @@ class ProjectController extends Controller
         $projectMembers = json_decode($project->detail->members, true) ?? [];
         // dd($projectMembers);
         $projectCategories = ProjectCategory::pluck('project_category_name', 'id')->prepend('Choose...', '');
+        $dosens = User::where('role', User::ROLE_DOSEN)->pluck('name', 'id')->prepend('Choose Dosen Pembimbing...', '');
         $years = array_reverse(range(2010, date('Y')));
         $semester = ['Ganjil', 'Genap'];
 
-        return view('main.project.update', compact('project', 'projectCategories', 'projectMembers', 'years', 'semester'));
+        return view('main.project.update', compact('project', 'projectCategories', 'projectMembers', 'years', 'semester', 'dosens'));
     }
 
     public function update(ProjectUpdateRequest $request, $id)
@@ -374,6 +394,7 @@ class ProjectController extends Controller
 
             // ===== Update Project =====
             $project->project_category_id = $data['project_category_id'];
+            $project->dosen_pembimbing_id = $data['dosen_pembimbing_id'];
             $project->project_title = $data['project_title'];
             $project->school_year = $data['school_year'];
             $project->semester = $data['semester'];

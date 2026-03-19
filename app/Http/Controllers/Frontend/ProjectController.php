@@ -14,60 +14,62 @@ class ProjectController extends Controller
 {
     public function index($uuid)
     {
-        $projectCategory = ProjectCategory::where('uuid', $uuid)->firstOrFail();
+        $projectCategory = ProjectCategory::with('studyProgram.department')->where('uuid', $uuid)->firstOrFail();
         $projectCategoryID = $projectCategory->id;
+
         $projects = Project::with(['projectCategory.studyProgram.department', 'detail'])
+            ->approved()
             ->where('project_category_id', $projectCategoryID)
+            ->orderBy('school_year', 'desc')
             ->orderBy('created_at', 'desc')
-            ->paginate(3);
-        return view('front_end.project.index', compact('projects', 'projectCategoryID'));
+            ->paginate(6);
+
+        $allYears = Project::approved()
+            ->where('project_category_id', $projectCategoryID)
+            ->distinct()
+            ->orderBy('school_year', 'desc')
+            ->pluck('school_year');
+
+        return view('front_end.project.index', compact('projects', 'projectCategoryID', 'projectCategory', 'allYears'));
     }
 
     public function loadMore(Request $request)
     {
-        $query = $request->get('query');
-        $projectCategoryID = $request->get('projectCategoryID');
-
-        $projects = Project::with(['projectCategory.studyProgram.department', 'detail'])
-            ->where('project_category_id', $projectCategoryID)
-            ->when($query, function ($q) use ($query) {
-                $q->where(function ($subQuery) use ($query) {
-                    $subQuery->where('project_title', 'like', "%{$query}%")
-                        ->orWhere('id', $query)
-                        ->orWhereHas('detail', function ($q2) use ($query) {
-                            $q2->where('description', 'like', "%{$query}%");
-                        });
-                });
-            })
-            ->orderBy('created_at', 'desc')
-            ->paginate(3);
-
+        $projects = $this->getFilteredProjects($request);
         $html = view('front_end.project.partials.project_card', compact('projects'))->render();
-
         return response()->json($html);
     }
 
     public function search(Request $request)
     {
+        $projects = $this->getFilteredProjects($request);
+        $html = view('front_end.project.partials.project_card', compact('projects'))->render();
+        return response()->json($html);
+    }
+
+    private function getFilteredProjects(Request $request)
+    {
         $query = $request->get('query');
+        $year = $request->get('year');
         $projectCategoryID = $request->get('projectCategoryID');
-        $q = Project::with(['projectCategory.studyProgram.department', 'detail'])
+
+        return Project::with(['projectCategory.studyProgram.department', 'detail'])
+            ->approved()
             ->where('project_category_id', $projectCategoryID)
             ->when($query, function ($q) use ($query) {
-                $q->where('project_title', 'like', "%$query%")
-                    ->orWhereHas('detail', function ($q2) use ($query) {
-                        $q2->where('description', 'like', "%$query%");
-                    });
+                $q->where(function ($subQuery) use ($query) {
+                    $subQuery->where('project_title', 'like', "%{$query}%")
+                        ->orWhereHas('detail', function ($q2) use ($query) {
+                            $q2->where('description', 'like', "%{$query}%");
+                        });
+                });
             })
-            // ->where('project_category_id', $projectCategoryID)
-            ->orderBy('created_at', 'desc');
-
-        $projects = $query == null ? $q->get() : $q->paginate(3);
-        // ->paginate(6);
-
-        $html = view('front_end.project.partials.project_card', compact('projects'))->render();
-
-        return response()->json($html);
+            ->when($year, function ($q) use ($year) {
+                $q->where('school_year', $year);
+            })
+            ->orderBy('school_year', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->paginate(6);
     }
 
     public function detail($slug, $uuid)
@@ -104,7 +106,11 @@ class ProjectController extends Controller
                 'project_categories.id as project_category_id',
                 DB::raw('COUNT(projects.id) as total')
             )
-            ->leftJoin('projects', 'project_categories.id', '=', 'projects.project_category_id')
+            ->leftJoin('projects', function ($join) {
+                $join->on('project_categories.id', '=', 'projects.project_category_id')
+                    ->where('projects.status', Project::STATUS_APPROVED)
+                    ->whereNull('projects.deleted_at');
+            })
             ->leftJoin('study_programs', 'project_categories.study_program_id', '=', 'study_programs.id')
             ->where('study_programs.id', $id)
             ->groupBy('project_categories.id', 'project_categories.project_category_name', 'project_categories.uuid')

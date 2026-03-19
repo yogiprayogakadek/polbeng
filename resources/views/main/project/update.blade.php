@@ -83,6 +83,27 @@
                         </div>
                     </div>
 
+                    {{-- Dosen Pembimbing --}}
+                    <div class="col-md-6">
+                        <div class="mb-3 position-relative">
+                            <label for="dosen_pembimbing_id" class="form-label">Dosen Pembimbing</label>
+                            <select name="dosen_pembimbing_id" id="dosen_pembimbing_id"
+                                class="form-select select2 @error('dosen_pembimbing_id') is-invalid @enderror"
+                                data-placeholder="Choose Dosen Pembimbing...">
+                                <option value="">Choose Dosen Pembimbing...</option>
+                                @foreach ($dosens as $key => $value)
+                                    <option value="{{ $key }}"
+                                        {{ old('dosen_pembimbing_id', $project->dosen_pembimbing_id) == $key ? 'selected' : '' }}>
+                                        {{ $value }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('dosen_pembimbing_id')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
 
                     {{-- Project Title --}}
                     <div class="col-md-6">

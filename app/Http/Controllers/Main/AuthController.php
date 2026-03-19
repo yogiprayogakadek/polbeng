@@ -34,8 +34,11 @@ class AuthController extends Controller
             //         ->with('error', 'Akun Anda non-aktif. Silakan hubungi admin untuk informasi lebih lanjut.');
             // }
 
-            // $redirect = $user->role == 'admin' ? 'admin/dashboard' : 'pegawai/dashboard';
-            $redirect = 'admin/dashboard';
+            $redirect = match ($user->role) {
+                'admin', 'petugas' => 'dashboard',
+                'dosen_pembimbing', 'kaprodi' => 'dashboard', // Shared dashboard or adjust as needed
+                default => 'dashboard',
+            };
 
             return redirect()->intended($redirect)
                 ->with('loginSuccess', 'Welcome, <strong>' . $user->name . '</strong>! Use the system wisely.');

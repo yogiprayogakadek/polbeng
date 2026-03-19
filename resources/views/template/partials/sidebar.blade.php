@@ -16,18 +16,20 @@
                     <!-- Pegawai -->
                     <!-- --------------------------------------------------------------------------------------------------------- -->
 
+                    @if(auth()->user()->isAdmin() || auth()->user()->isPetugas() || auth()->user()->isDosen() || auth()->user()->isKaprodi())
                     <li class="mini-nav-item single-menu" id="dashboard">
                         <a href="{{ route('dashboard.admin') }}" data-bs-toggle="tooltip"
                             data-bs-custom-class="custom-tooltip" data-bs-placement="right" data-bs-title="Dashboard">
                             <iconify-icon icon="solar:home-line-duotone" class="fs-7"></iconify-icon>
                         </a>
                     </li>
+                    @endif
 
                     {{-- <li>
                         <span class="sidebar-divider lg"></span>
                     </li> --}}
 
-
+                    @if(auth()->user()->isAdmin() || auth()->user()->isPetugas())
                     <li class="mini-nav-item" id="mini-1">
                         <a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip"
                             data-bs-placement="right" data-bs-title="Department">
@@ -53,6 +55,34 @@
                             <iconify-icon icon="solar:folder-with-files-bold" class="fs-7"></iconify-icon>
                         </a>
                     </li>
+                    @endif
+
+                    @if(auth()->user()->isAdmin())
+                    <li class="mini-nav-item" id="mini-5">
+                        <a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip"
+                            data-bs-placement="right" data-bs-title="User Management">
+                            <iconify-icon icon="solar:users-group-rounded-bold" class="fs-7"></iconify-icon>
+                        </a>
+                    </li>
+                    @endif
+
+                    @if(auth()->user()->isDosen())
+                    <li class="mini-nav-item" id="mini-6">
+                        <a href="javascript:void(0)" data-bs-toggle="tooltip"
+                            data-bs-custom-class="custom-tooltip" data-bs-placement="right" data-bs-title="Project Validation">
+                            <iconify-icon icon="solar:shield-check-bold" class="fs-7"></iconify-icon>
+                        </a>
+                    </li>
+                    @endif
+
+                    @if(auth()->user()->isKaprodi())
+                    <li class="mini-nav-item" id="mini-6">
+                        <a href="javascript:void(0)" data-bs-toggle="tooltip"
+                            data-bs-custom-class="custom-tooltip" data-bs-placement="right" data-bs-title="Project Approval">
+                            <iconify-icon icon="solar:check-read-bold" class="fs-7"></iconify-icon>
+                        </a>
+                    </li>
+                    @endif
 
                 </ul>
 
@@ -65,6 +95,7 @@
 
                 </div>
 
+                @if(auth()->user()->isAdmin() || auth()->user()->isPetugas())
                 <!-- ---------------------------------- -->
                 <!-- Department -->
                 <!-- ---------------------------------- -->
@@ -89,6 +120,7 @@
                         </li>
                         {{-- @endcan --}}
 
+                        @if(auth()->user()->isAdmin())
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('department.create') }}" aria-expanded="false">
                                 <iconify-icon icon="solar:user-plus-bold-duotone"></iconify-icon>
@@ -102,9 +134,12 @@
                                 <span class="hide-menu">Deleted Items</span>
                             </a>
                         </li>
+                        @endif
                     </ul>
                 </nav>
+                @endif
 
+                @if(auth()->user()->isAdmin() || auth()->user()->isPetugas())
                 <!-- ---------------------------------- -->
                 <!-- Study Program -->
                 <!-- ---------------------------------- -->
@@ -129,6 +164,7 @@
                         </li>
                         {{-- @endcan --}}
 
+                        @if(auth()->user()->isAdmin())
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('studyProgram.create') }}" aria-expanded="false">
                                 <iconify-icon icon="solar:user-plus-bold-duotone"></iconify-icon>
@@ -143,9 +179,12 @@
                                 <span class="hide-menu">Deleted Items</span>
                             </a>
                         </li>
+                        @endif
                     </ul>
                 </nav>
+                @endif
 
+                @if(auth()->user()->isAdmin() || auth()->user()->isPetugas())
                 <!-- ---------------------------------- -->
                 <!-- Project Category -->
                 <!-- ---------------------------------- -->
@@ -170,6 +209,7 @@
                         </li>
                         {{-- @endcan --}}
 
+                        @if(auth()->user()->isAdmin())
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('projectCategory.create') }}"
                                 aria-expanded="false">
@@ -185,9 +225,12 @@
                                 <span class="hide-menu">Deleted Items</span>
                             </a>
                         </li>
+                        @endif
                     </ul>
                 </nav>
+                @endif
 
+                @if(auth()->user()->isAdmin() || auth()->user()->isPetugas())
                 <!-- ---------------------------------- -->
                 <!-- Project -->
                 <!-- ---------------------------------- -->
@@ -227,6 +270,86 @@
                         </li>
                     </ul>
                 </nav>
+                @endif
+
+                @if(auth()->user()->isAdmin())
+                <!-- ---------------------------------- -->
+                <!-- User Management -->
+                <!-- ---------------------------------- -->
+                <nav class="sidebar-nav" id="menu-right-mini-5" data-simplebar>
+                    <ul class="sidebar-menu" id="sidebarnav">
+                        <!-- ---------------------------------- -->
+                        <!-- User Management -->
+                        <!-- ---------------------------------- -->
+                        <li class="nav-small-cap">
+                            <span class="hide-menu">User Management</span>
+                        </li>
+                        <!-- ---------------------------------- -->
+                        <!-- User Management -->
+                        <!-- ---------------------------------- -->
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" id="user" href="{{ route('user.index') }}"
+                                aria-expanded="false">
+                                <iconify-icon icon="solar:users-group-rounded-bold-duotone"></iconify-icon>
+                                <span class="hide-menu">User List</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{ route('user.create') }}" aria-expanded="false">
+                                <iconify-icon icon="solar:user-plus-bold-duotone"></iconify-icon>
+                                <span class="hide-menu">Create User</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{ route('user.showRestore') }}" aria-expanded="false">
+                                <iconify-icon icon="solar:trash-bin-minimalistic-broken"></iconify-icon>
+                                <span class="hide-menu">Deleted Users</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                @endif
+
+                @if(auth()->user()->isDosen())
+                <!-- ---------------------------------- -->
+                <!-- Project Validation (Dosen) -->
+                <!-- ---------------------------------- -->
+                <nav class="sidebar-nav" id="menu-right-mini-6" data-simplebar>
+                    <ul class="sidebar-menu" id="sidebarnav">
+                        <li class="nav-small-cap">
+                            <span class="hide-menu">Validation</span>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{ route('dosen.index') }}" aria-expanded="false">
+                                <iconify-icon icon="solar:shield-check-bold-duotone"></iconify-icon>
+                                <span class="hide-menu">Project Validation List</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                @endif
+
+                @if(auth()->user()->isKaprodi())
+                <!-- ---------------------------------- -->
+                <!-- Project Approval (Kaprodi) -->
+                <!-- ---------------------------------- -->
+                <nav class="sidebar-nav" id="menu-right-mini-6" data-simplebar>
+                    <ul class="sidebar-menu" id="sidebarnav">
+                        <li class="nav-small-cap">
+                            <span class="hide-menu">Approval</span>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{ route('kaprodi.index') }}" aria-expanded="false">
+                                <iconify-icon icon="solar:check-read-bold-duotone"></iconify-icon>
+                                <span class="hide-menu">Project Approval List</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                @endif
+
 
             </div>
         </div>

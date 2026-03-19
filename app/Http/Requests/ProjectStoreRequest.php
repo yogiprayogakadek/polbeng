@@ -15,6 +15,7 @@ class ProjectStoreRequest extends FormRequest
     {
         return [
             'project_category_id' => 'required|exists:project_categories,id',
+            'dosen_pembimbing_id' => 'required|exists:users,id',
             'project_title' => 'required|string|max:255',
             'school_year' => 'required|string|max:15',
             'semester' => 'required|string',

@@ -7,6 +7,7 @@ use App\Models\ProjectCategory;
 use App\Models\ProjectDetail;
 use App\Models\ProjectGallery;
 use App\Models\StudyProgram;
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -72,8 +73,13 @@ class ProjectSeeder extends Seeder
     public function run()
     {
         $projectCategories = ProjectCategory::all();
-        $totalProjects = 1000; // Jumlah total proyek
+        $totalProjects = 100; // Reduced for better performance
         $projectsPerCategory = (int) ceil($totalProjects / $projectCategories->count());
+
+        $dosens = User::where('role', 'dosen_pembimbing')->get();
+        if ($dosens->isEmpty()) {
+            return;
+        }
 
         $faker = \Faker\Factory::create('id_ID'); // Faker Bahasa Indonesia
 
@@ -109,13 +115,30 @@ class ProjectSeeder extends Seeder
                     $faker->randomElement(['Proyek', 'Sistem', 'Aplikasi', 'Platform']) . ' ' .
                     'Menggunakan ' . $faker->randomElement($categoryInfo['tech']);
 
+                // Random Status and Assignment
+                $status = $faker->randomElement([
+                    Project::STATUS_PENDING,
+                    Project::STATUS_VERIFIED_DOSEN,
+                    Project::STATUS_APPROVED,
+                    Project::STATUS_REJECTED_DOSEN,
+                    Project::STATUS_REJECTED_KAPRODI
+                ]);
+
+                $rejectionReason = null;
+                if ($status === Project::STATUS_REJECTED_DOSEN || $status === Project::STATUS_REJECTED_KAPRODI) {
+                    $rejectionReason = $faker->sentence(10);
+                }
+
                 // Buat project dengan gambar lokal
                 $project = Project::create([
                     'project_category_id' => $category->id,
+                    'dosen_pembimbing_id' => $dosens->random()->id,
                     'project_title' => $projectTitle,
                     'school_year' => "$startYear/$endYear",
                     'semester' => $faker->randomElement(['Ganjil', 'Genap']),
                     'thumbnail' => $localThumbnail,
+                    'status' => $status,
+                    'rejection_reason' => $rejectionReason,
                 ]);
 
                 // Generate anggota tim (3-5 orang)

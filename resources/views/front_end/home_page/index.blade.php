@@ -110,15 +110,43 @@
 
         /* Keep all your existing styles */
         .category-card {
-            transition: all 0.3s ease;
-            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
+            z-index: 1;
+            border: 1px solid rgba(255, 255, 255, 0.3);
             overflow: hidden;
-            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 20px;
+            padding: 2px;
+            background: var(--primary-gradient);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0.2;
+            transition: opacity 0.4s ease;
         }
 
         .category-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(-8px) scale(1.02);
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2);
+        }
+
+        .category-card:hover::before {
+            opacity: 1;
         }
 
         .category-badge {
@@ -206,6 +234,44 @@
                 padding: 1.5rem;
             }
         }
+
+        /* Search Styles */
+        .search-container {
+            position: relative;
+            z-index: 1000;
+        }
+
+        #search-results-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin-top: 12px;
+            z-index: 1001;
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 5px 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .search-result-item {
+            transition: all 0.2s ease !important;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04) !important;
+            background: transparent !important;
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none !important;
+        }
+
+        .search-result-item:hover {
+            background: rgba(59, 130, 246, 0.04) !important;
+            padding-left: 1.75rem !important; /* Subtle slide effect */
+        }
     </style>
 @endpush
 
@@ -227,6 +293,18 @@
                                 real-world industry needs, creativity, and research-driven innovation.
                             </p>
                         </div>
+                        <div class="search-container mb-4" style="max-width: 500px;">
+                            <div class="input-group input-group-lg shadow-sm rounded-pill overflow-hidden">
+                                <span class="input-group-text bg-white border-end-0 ps-4">
+                                    <i class="ti ti-search text-muted fs-5"></i>
+                                </span>
+                                <input type="text" id="global-search-input"
+                                    class="form-control border-start-0 ps-0 fs-5 py-3"
+                                    placeholder="Search for projects, teams, or tech...">
+                            </div>
+                            <div id="search-results-dropdown"></div>
+                        </div>
+
                         <div class="d-flex gap-3">
                             <a href="#projects" class="btn btn-primary btn-lg px-4">Discover More</a>
                             <a href="#contact" class="btn btn-outline-primary btn-lg px-4">Get Involved</a>
@@ -266,7 +344,7 @@
                         Empowering Innovation Through Project-Based Learning
                     </h2>
                     <p class="fs-4 text-muted mb-4">
-                        Since 2020, our students have successfully delivered over 300 impactful IT projects, showcasing
+                        Since 2020, our students have successfully delivered over {{ $stats['total'] }} impactful IT projects, showcasing
                         creativity, collaboration, and technological innovation.
                     </p>
                     <ul class="list-unstyled fs-4 mb-4">
@@ -274,19 +352,19 @@
                             <span class="badge bg-primary bg-opacity-10 text-primary me-3 p-2 rounded-circle">
                                 <i class="ti ti-check"></i>
                             </span>
-                            <span>150+ Application & Mobile Development</span>
+                            <span>{{ $stats['dev'] }}+ Application & Mobile Development</span>
                         </li>
                         <li class="mb-2 d-flex align-items-center">
                             <span class="badge bg-primary bg-opacity-10 text-primary me-3 p-2 rounded-circle">
                                 <i class="ti ti-check"></i>
                             </span>
-                            <span>80+ IoT & Networking Solutions</span>
+                            <span>{{ $stats['iot'] }}+ IoT & Networking Solutions</span>
                         </li>
                         <li class="mb-2 d-flex align-items-center">
                             <span class="badge bg-primary bg-opacity-10 text-primary me-3 p-2 rounded-circle">
                                 <i class="ti ti-check"></i>
                             </span>
-                            <span>70+ Multimedia, Animation & Videography</span>
+                            <span>{{ $stats['media'] }}+ Multimedia, Animation & Videography</span>
                         </li>
                     </ul>
                     <a href="#contact" class="btn btn-outline-primary btn-lg px-4">
@@ -464,6 +542,39 @@
 
                 // Manually activate tab
                 $(this).tab('show');
+            });
+
+            // Global Search Logic
+            let searchTimeout;
+            $('#global-search-input').on('keyup', function() {
+                clearTimeout(searchTimeout);
+                const query = $(this).val().trim();
+                const dropdown = $('#search-results-dropdown');
+
+                if (query.length < 2) {
+                    dropdown.hide().empty();
+                    return;
+                }
+
+                searchTimeout = setTimeout(() => {
+                    $.ajax({
+                        url: "{{ route('frontend.global.search') }}",
+                        method: 'GET',
+                        data: {
+                            query: query
+                        },
+                        success: function(response) {
+                            dropdown.html(response.html).fadeIn(200);
+                        }
+                    });
+                }, 300);
+            });
+
+            // Close search results when clicking outside
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.search-container').length) {
+                    $('#search-results-dropdown').fadeOut(200);
+                }
             });
 
             function loadDepartmentContent(id) {

@@ -31,7 +31,9 @@
                             <th>Department Code</th>
                             <th>Department Name</th>
                             <th>Status</th>
+                            @if(auth()->user()->isAdmin())
                             <th>Action</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -43,6 +45,7 @@
                                     <span
                                         class="badge text-bg-{{ $data->is_active == true ? 'primary' : 'warning' }}">{{ $data->is_active == true ? 'Active' : 'Disabled' }}</span>
                                 </td>
+                                @if(auth()->user()->isAdmin())
                                 <td>
                                     <button type="button"
                                         class="btn {{ $data->is_active ? 'bg-primary-subtle text-primary' : 'bg-warning-subtle text-warning' }} btn-toggle-status"
@@ -75,9 +78,8 @@
                                         <iconify-icon icon="solar:trash-bin-trash-bold-duotone" width="1em"
                                             height="1em"></iconify-icon>
                                     </button>
-
-
                                 </td>
+                                @endif
                             </tr>
                         @endforeach
                     </tbody>

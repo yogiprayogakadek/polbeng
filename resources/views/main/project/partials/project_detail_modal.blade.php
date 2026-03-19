@@ -132,6 +132,43 @@
                         </div>
                     </div>
 
+                    <!-- Validation Status -->
+                    <div class="col-12">
+                        <div class="card shadow-sm rounded-3">
+                            <div class="card-body">
+                                <h5 class="fw-semibold mb-3"><i class="ti ti-checklist me-2"></i> Validation Status</h5>
+                                <div class="row text-center">
+                                    <div class="col-md-6 border-end">
+                                        <p class="text-muted mb-1">Dosen Pembimbing</p>
+                                        @if ($project->status === \App\Models\Project::STATUS_PENDING)
+                                            <span class="badge bg-warning-subtle text-warning fs-3">Pending</span>
+                                        @elseif ($project->status === \App\Models\Project::STATUS_REJECTED_DOSEN)
+                                            <span class="badge bg-danger-subtle text-danger fs-3">Rejected</span>
+                                        @else
+                                            <span class="badge bg-success-subtle text-success fs-3">Verified</span>
+                                        @endif
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p class="text-muted mb-1">Ketua Program Studi</p>
+                                        @if ($project->status === \App\Models\Project::STATUS_APPROVED)
+                                            <span class="badge bg-success-subtle text-success fs-3">Approved</span>
+                                        @elseif ($project->status === \App\Models\Project::STATUS_REJECTED_KAPRODI)
+                                            <span class="badge bg-danger-subtle text-danger fs-3">Rejected</span>
+                                        @else
+                                            <span class="badge bg-warning-subtle text-warning fs-3">Waiting</span>
+                                        @endif
+                                    </div>
+                                </div>
+                                @if($project->rejection_reason)
+                                    <div class="alert alert-danger mt-3 mb-0 rounded-3">
+                                        <h6 class="alert-heading fw-bold mb-1">Rejection Reason:</h6>
+                                        <p class="mb-0">{{ $project->rejection_reason }}</p>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Thumbnail & Poster -->
                     <div class="col-md-6">
                         <div class="card shadow-sm rounded-3 text-center">

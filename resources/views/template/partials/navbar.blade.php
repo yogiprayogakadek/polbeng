@@ -173,9 +173,11 @@
                                 <img src="https://bootstrapdemos.adminmart.com/matdash/dist/assets/images/profile/user-1.jpg"
                                     class="rounded-circle" width="56" height="56" alt="matdash-img" />
                                 <div>
-                                    {{-- <h5 class="mb-0 fs-12">David McMichael <span class="text-success fs-11">Pro</span></h5> --}}
                                     <h5 class="mb-0 fs-12">{{ auth()->user()->name }}</h5>
                                     <p class="mb-0 text-dark">
+                                        {{ auth()->user()->role_label }}
+                                    </p>
+                                    <p class="mb-0 text-muted fs-2">
                                         {{ auth()->user()->email }}
                                     </p>
                                 </div>

@@ -44,6 +44,8 @@
                         <th>Semester</th>
                         <th>Detail</th>
                         <th>Galleries</th>
+                        <th>Dosen</th>
+                        <th>Kaprodi</th>
                         <th data-priority="3">Status</th>
                         <th data-priority="1">Action</th>
                     </tr>
@@ -104,6 +106,18 @@
                     searchable: false
                 },
                 {
+                    data: 'dosen_status',
+                    name: 'dosen_status',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'kaprodi_status',
+                    name: 'kaprodi_status',
+                    orderable: false,
+                    searchable: false
+                },
+                {
                     data: 'status',
                     name: 'is_active'
                 },
@@ -114,10 +128,13 @@
                     searchable: false
                 }
             ],
-            responsive: true,
-            initComplete: function() {
-                // Inisialisasi tooltip setelah tabel selesai dimuat
-                $('[data-bs-toggle="tooltip"]').tooltip();
+            drawCallback: function() {
+                // Re-initialize tooltips on every draw (pagination, search, etc.)
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll(
+                    '[data-bs-toggle="tooltip"]'))
+                var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+                    return bootstrap.Tooltip.getOrCreateInstance(tooltipTriggerEl)
+                })
             }
         });
 
@@ -153,7 +170,7 @@
                                 response.message,
                                 'success'
                             ).then(() => {
-                                location.reload();
+                                table.ajax.reload(null, false);
                             });
                         },
                         error: function() {
@@ -171,7 +188,6 @@
         $(document).on('click', '.btn-delete', function() {
             const name = $(this).data('name');
             const url = $(this).data('url');
-            const id = $(this).data('id');
 
             Swal.fire({
                 title: 'Are you sure?',
@@ -193,7 +209,7 @@
                         },
                         success: function(response) {
                             Swal.fire('Success!', response.message, 'success').then(() => {
-                                location.reload();
+                                table.ajax.reload(null, false);
                             });
                         },
                         error: function(err) {
@@ -205,36 +221,80 @@
             });
         });
 
+        // Robust cleanup for any hidden modal
+        $(document).on('hidden.bs.modal', '.modal', function() {
+            const $this = $(this);
+            $this.remove();
+
+            // Force removal of remaining backdrops and style cleanups
+            if ($('.modal.show').length === 0) {
+                $('.modal-backdrop').remove();
+                $('body').removeClass('modal-open').css({
+                    'overflow': '',
+                    'padding-right': ''
+                });
+            }
+        });
+
         $('body').on('click', '.modal-btn', function() {
-            let url = $(this).data('url');
-            let modalID = $(this).data('modal-id');
-            $.get(url, function(response) {
-                let htmlContent = '';
+            const $btn = $(this);
+            const url = $btn.data('url');
+            const modalID = $btn.data('modal-id');
 
-                if (typeof response === 'object' && response.status !== undefined) {
-                    htmlContent = response.html;
-                } else {
-                    htmlContent = response; // fallback for general response (without JSON wrapper)
-                }
+            const startLoading = function() {
+                $.get(url, function(response) {
+                    let htmlContent = '';
+                    if (typeof response === 'object') {
+                        htmlContent = response.html || (response.status !== undefined ? response.html :
+                            response);
+                        if (typeof response === 'object' && !response.html && !response.status) {
+                            htmlContent = Object.values(response)[0];
+                        }
+                    } else {
+                        htmlContent = response;
+                    }
 
-                $('.modal-render').html(htmlContent);
-                $('#' + modalID).modal('show');
+                    // Pre-cleanup before appending new modal
+                    $('.modal-render').empty();
+                    $('.modal-render').append(htmlContent);
 
-                // Re-initialize GLightbox if exists
-                if (typeof GLightbox === 'function') {
-                    GLightbox({
-                        selector: '.glightbox',
-                        touchNavigation: true,
-                        loop: true,
-                        zoomable: true
+                    const modalEl = document.getElementById(modalID);
+                    if (modalEl) {
+                        const modalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
+                        modalInstance.show();
+                    }
+
+                    // Re-init plugins
+                    if (typeof GLightbox === 'function') {
+                        GLightbox({
+                            selector: '.glightbox',
+                            touchNavigation: true,
+                            loop: true,
+                            zoomable: true
+                        });
+                    }
+                    if (typeof bindDeleteButtons === 'function') bindDeleteButtons();
+                });
+            };
+
+            const openModal = $('.modal.show');
+            if (openModal.length > 0) {
+                const modalInstance = bootstrap.Modal.getInstance(openModal[0]);
+                if (modalInstance) {
+                    openModal.one('hidden.bs.modal', function() {
+                        startLoading();
                     });
+                    modalInstance.hide();
+                } else {
+                    // Fallback cleanup
+                    openModal.remove();
+                    $('.modal-backdrop').remove();
+                    $('body').removeClass('modal-open');
+                    startLoading();
                 }
-
-                // re-run delete event if exists
-                if (typeof bindDeleteButtons === 'function') {
-                    bindDeleteButtons();
-                }
-            });
+            } else {
+                startLoading();
+            }
         });
     </script>
 @endpush
