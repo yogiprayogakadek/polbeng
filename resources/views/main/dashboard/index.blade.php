@@ -17,84 +17,85 @@
             --purple: #6366f1;
             --pink: #ec4899;
             --light-gray: #f8f9fa;
-            --text-dark: #343a40;
-            --text-muted: #6c757d;
+            --text-dark: #334155;
+            --text-muted: #64748b;
         }
 
         body {
-            background-color: var(--light-gray);
+            background-color: #f1f5f9;
         }
 
-        .card {
-            border: none;
-            border-radius: 1rem;
-            /* Sudut lebih bulat */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease-in-out;
-            background: #fff;
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 1.25rem;
+            box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.03);
+            transition: all 0.3s ease;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Gradien halus untuk latar belakang card header */
-        .card .card-header {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, var(--light-gray) 100%);
-            border-bottom: none;
-            font-weight: 600;
-            color: var(--text-dark);
+        .glass-panel:hover {
+            box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.06);
         }
 
         .chart-container {
-            height: 320px;
+            height: 350px;
             position: relative;
+            padding: 10px;
         }
 
-        .chart-loader {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+        /* Skeleton Screen Animation */
+        @keyframes skeleton-loading {
+            0% { background-position: 100% 50%; }
+            100% { background-position: 0 50%; }
         }
 
-        .chart-empty {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            color: var(--text-muted);
-        }
-
-        /* Efek transisi untuk kemunculan canvas */
-        canvas {
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        canvas.show {
-            opacity: 1;
-        }
-
-        /* Styling untuk filter */
-        .filter-card {
-            background: #ffffff;
-        }
-
-        .table-responsive {
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
             border-radius: 0.5rem;
         }
 
-        thead {
-            background-color: var(--primary);
-            color: white;
+        .skeleton-text { height: 20px; margin-bottom: 10px; width: 80%; }
+        .skeleton-chart { height: 100%; width: 100%; }
+
+        .form-select {
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+            padding: 0.6rem 1rem;
+            transition: all 0.2s;
+        }
+
+        .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(59, 130, 246, 0.03);
+            transform: scale(1.002);
+            transition: all 0.2s ease;
+        }
+
+        .table thead th {
+            background: #f8fafc;
+            color: #475569;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1.25rem 1rem;
         }
 
         @media (max-width: 768px) {
             .chart-container {
-                height: 280px;
+                height: 300px;
+            }
+            .card.glass-panel {
+                padding: 1.25rem !important;
             }
         }
     </style>
@@ -108,10 +109,10 @@
 
     <div class="row g-4 mb-4" data-aos="fade-up">
         <div class="col-12">
-            <div class="card p-3 filter-card">
-                <div class="d-flex flex-column flex-md-row flex-wrap gap-3 align-items-center">
+            <div class="card p-4 glass-panel border-0">
+                <div class="d-flex flex-column flex-md-row flex-wrap gap-4 align-items-center">
                     <div class="flex-grow-1">
-                        <label for="yearFilter" class="form-label fw-semibold">Tahun</label>
+                        <label for="yearFilter" class="form-label fw-bold text-dark fs-2 mb-2">School Year</label>
                         <select id="yearFilter" class="form-select">
                             <option value="">Semua Tahun</option>
                             @foreach ($projectsPerYear->keys() as $year)
@@ -137,73 +138,80 @@
 
     <div class="row g-4">
         <div class="col-xl-6" data-aos="fade-up" data-aos-delay="100">
-            <div class="card p-3 h-100">
-                <h5 class="fw-semibold mb-3 d-flex align-items-center gap-2">
-                    <i class="ti ti-calendar-event"></i> Proyek per Tahun
+            <div class="card glass-panel border-0 p-4 h-100">
+                <h5 class="fw-bold mb-4 d-flex align-items-center gap-2 text-dark">
+                    <iconify-icon icon="solar:chart-2-bold-duotone" class="text-primary fs-6"></iconify-icon>
+                    Projects per Year
                 </h5>
                 <div class="chart-container">
-                    <div id="projectsPerYearLoader" class="chart-loader">
-                        <div class="spinner-border text-primary" role="status"></div>
-                    </div>
+                    <div id="projectsPerYearLoader" class="chart-loader w-100 h-100 skeleton skeleton-chart"></div>
                     <canvas id="projectsPerYearChart"></canvas>
-                    <div id="projectsPerYearEmpty" class="chart-empty" style="display:none;">
-                        <i class="ti ti-chart-bar-off fs-1"></i>
-                        <p class="mt-2">Data tidak ditemukan</p>
+                    <div id="projectsPerYearEmpty" style="display:none;">
+                        @include('partials.empty_state', [
+                            'icon' => 'solar:chart-square-broken-duotone',
+                            'title' => 'No Annual Data',
+                            'description' => 'We couldn\'t find any project data for the selected years.'
+                        ])
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="col-xl-6" data-aos="fade-up" data-aos-delay="200">
-            <div class="card p-3 h-100">
-                <h5 class="fw-semibold mb-3 d-flex align-items-center gap-2">
-                    <i class="ti ti-layout-grid"></i> Proyek per Kategori
+            <div class="card glass-panel border-0 p-4 h-100">
+                <h5 class="fw-bold mb-4 d-flex align-items-center gap-2 text-dark">
+                    <iconify-icon icon="solar:pie-chart-2-bold-duotone" class="text-info fs-6"></iconify-icon>
+                    Projects per Category
                 </h5>
                 <div class="chart-container">
-                    <div id="projectsPerCategoryLoader" class="chart-loader">
-                        <div class="spinner-border text-primary" role="status"></div>
-                    </div>
+                    <div id="projectsPerCategoryLoader" class="chart-loader w-100 h-100 skeleton skeleton-chart"></div>
                     <canvas id="projectsPerCategoryChart"></canvas>
-                    <div id="projectsPerCategoryEmpty" class="chart-empty" style="display:none;">
-                        <i class="ti ti-chart-pie-off fs-1"></i>
-                        <p class="mt-2">Data tidak ditemukan</p>
+                    <div id="projectsPerCategoryEmpty" style="display:none;">
+                        @include('partials.empty_state', [
+                            'icon' => 'solar:pie-chart-broken-duotone',
+                            'title' => 'No Category Data',
+                            'description' => 'No project categories are currently represented in this dataset.'
+                        ])
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="col-12" data-aos="fade-up" data-aos-delay="300">
-            <div class="card p-3 mt-4">
-                <h5 class="fw-semibold mb-3 d-flex align-items-center gap-2">
-                    <i class="ti ti-trending-up"></i> Tren Proyek
+            <div class="card glass-panel border-0 p-4 mt-4">
+                <h5 class="fw-bold mb-4 d-flex align-items-center gap-2 text-dark">
+                    <iconify-icon icon="solar:graph-new-bold-duotone" class="text-success fs-6"></iconify-icon>
+                    Project Trends
                 </h5>
                 <div class="chart-container">
-                    <div id="projectsTrendLoader" class="chart-loader">
-                        <div class="spinner-border text-primary" role="status"></div>
-                    </div>
+                    <div id="projectsTrendLoader" class="chart-loader w-100 h-100 skeleton skeleton-chart"></div>
                     <canvas id="projectsTrendChart"></canvas>
-                    <div id="projectsTrendEmpty" class="chart-empty" style="display:none;">
-                        <i class="ti ti-chart-line-off fs-1"></i>
-                        <p class="mt-2">Data tidak ditemukan</p>
+                    <div id="projectsTrendEmpty" style="display:none;">
+                        @include('partials.empty_state', [
+                            'icon' => 'solar:graph-broken-duotone',
+                            'title' => 'No Trend Data',
+                            'description' => 'Historical trends are not available for the current filter selection.'
+                        ])
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="card p-4 mt-4" data-aos="fade-up" data-aos-delay="400">
-        <h5 class="fw-semibold mb-3 d-flex align-items-center gap-2">
-            <i class="ti ti-list-details"></i> Daftar Proyek Terbaru
+    <div class="card glass-panel border-0 p-4 mt-4" data-aos="fade-up" data-aos-delay="400">
+        <h5 class="fw-bold mb-4 d-flex align-items-center gap-2 text-dark">
+            <iconify-icon icon="solar:list-bold-duotone" class="text-primary fs-6"></iconify-icon>
+            Recent Project Submissions
         </h5>
         <div class="table-responsive">
-            <table class="table table-hover align-middle" id="recentProjectsTable">
+            <table class="table table-hover align-middle mb-0" id="recentProjectsTable">
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>Judul Proyek</th>
-                        <th>Kategori</th>
-                        <th>Tahun Ajaran</th>
-                        <th>Semester</th>
+                        <th class="border-top-0">#</th>
+                        <th class="border-top-0">Project Title</th>
+                        <th class="border-top-0">Category</th>
+                        <th class="border-top-0">Academic Year</th>
+                        <th class="border-top-0">Semester</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -240,17 +248,17 @@
             trend: null
         };
 
-        // Skema warna untuk grafik
+        // Skema warna untuk grafik (Premium Palette)
         const chartColorSchemes = {
             perYear: {
-                background: 'rgba(59, 130, 246, 0.8)',
-                border: '#3b82f6'
+                background: 'rgba(57, 106, 255, 0.7)',
+                border: '#396aff'
             },
-            perCategory: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#6366f1', '#ec4899'],
+            perCategory: ['#396aff', '#00d084', '#ffbc0d', '#ff5c5c', '#8a3ffc', '#ff7eb6'],
             trend: {
-                line: '#3b82f6',
-                fill: 'rgba(59, 130, 246, 0.1)',
-                point: '#3b82f6'
+                line: '#396aff',
+                fill: 'rgba(57, 106, 255, 0.08)',
+                point: '#396aff'
             }
         };
 
@@ -436,24 +444,28 @@
                     legend: {
                         position: (type === 'doughnut' || type === 'pie') ? 'bottom' : 'top',
                         labels: {
-                            color: '#333',
+                            color: '#475569',
+                            usePointStyle: true,
+                            padding: 20,
                             font: {
-                                weight: '500'
+                                size: 12,
+                                weight: '600'
                             }
                         }
                     },
                     tooltip: {
                         enabled: true,
-                        backgroundColor: 'rgba(0,0,0,0.8)',
+                        backgroundColor: '#1e293b',
                         titleFont: {
                             size: 14,
-                            weight: 'bold'
+                            weight: '700'
                         },
                         bodyFont: {
-                            size: 12
+                            size: 13
                         },
-                        padding: 10,
-                        cornerRadius: 8,
+                        padding: 12,
+                        cornerRadius: 12,
+                        displayColors: true,
                         callbacks: {
                             label: function(context) {
                                 let label = context.dataset.label || context.label || '';
@@ -468,19 +480,23 @@
                 scales: (type === 'bar' || type === 'line') ? {
                     y: {
                         beginAtZero: true,
+                        border: { display: false },
                         grid: {
-                            color: 'rgba(0,0,0,0.05)'
+                            color: '#f1f5f9'
                         },
                         ticks: {
-                            color: '#666'
+                            color: '#94a3b8',
+                            font: { size: 11, weight: '500' }
                         }
                     },
                     x: {
+                        border: { display: false },
                         grid: {
                             display: false
                         },
                         ticks: {
-                            color: '#666'
+                            color: '#94a3b8',
+                            font: { size: 11, weight: '500' }
                         }
                     }
                 } : {}

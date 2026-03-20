@@ -1,4 +1,45 @@
-<nav class="navbar navbar-expand-lg p-0">
+<style>
+    .navbar {
+        background: rgba(255, 255, 255, 0.7) !important;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+        padding: 1rem 2rem !important;
+        transition: all 0.3s ease;
+    }
+
+    .nav-icon-hover-bg {
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .nav-icon-hover-bg:hover {
+        background-color: rgba(59, 130, 246, 0.08) !important;
+        color: #3b82f6 !important;
+        transform: scale(1.1);
+    }
+
+    .profile-dropdown {
+        border: 1px solid rgba(0, 0, 0, 0.05) !important;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
+        border-radius: 1.25rem !important;
+        padding: 0.5rem !important;
+        overflow: hidden;
+    }
+
+    .dropdown-item {
+        padding: 0.75rem 1rem !important;
+        border-radius: 0.75rem !important;
+        transition: all 0.2s ease;
+    }
+
+    .dropdown-item:hover {
+        background-color: rgba(59, 130, 246, 0.05) !important;
+        color: #3b82f6 !important;
+        padding-left: 1.25rem !important;
+    }
+</style>
+
+<nav class="navbar navbar-expand-lg p-0 sticky-top">
     <ul class="navbar-nav">
         <li class="nav-item d-flex d-xl-none">
             <a class="nav-link nav-icon-hover-bg rounded-circle  sidebartoggler " id="headerCollapse"

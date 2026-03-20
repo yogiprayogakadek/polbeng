@@ -36,22 +36,47 @@
 
             <div class="body-wrapper">
                 <div class="container-fluid">
-                    <div class="card card-body py-3" id="breadcrumb">
+                    <style>
+                        .glass-breadcrumb {
+                            background: rgba(255, 255, 255, 0.7);
+                            backdrop-filter: blur(10px);
+                            -webkit-backdrop-filter: blur(10px);
+                            border: 1px solid rgba(255, 255, 255, 0.4);
+                            border-radius: 1.25rem;
+                            box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.03);
+                        }
+                        .breadcrumb-item + .breadcrumb-item::before {
+                            content: "\F64D";
+                            font-family: "Tabler Icons";
+                            font-size: 0.8rem;
+                            color: #94a3b8;
+                            margin: 0 0.5rem;
+                        }
+                        .page-title-gradient {
+                            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;
+                        }
+                    </style>
+
+                    <div class="card glass-breadcrumb border-0 py-3 mb-4" id="breadcrumb">
                         <div class="row align-items-center">
                             <div class="col-12">
-                                <div class="d-sm-flex align-items-center justify-space-between">
-                                    <h4 class="mb-4 mb-sm-0 card-title">@yield('page-title')</h4>
+                                <div class="px-4 d-sm-flex align-items-center justify-space-between">
+                                    <h4 class="mb-3 mb-sm-0 fw-bold tracking-tight text-dark">
+                                        @yield('page-title')
+                                    </h4>
                                     <nav aria-label="breadcrumb" class="ms-auto">
-                                        <ol class="breadcrumb">
+                                        <ol class="breadcrumb mb-0 align-items-center">
                                             <li class="breadcrumb-item d-flex align-items-center">
-                                                <a class="text-muted text-decoration-none d-flex"
+                                                <a class="text-muted text-decoration-none d-flex hover-primary transition-all"
                                                     href="{{ route('dashboard.admin') }}">
-                                                    <iconify-icon icon="solar:home-2-line-duotone"
+                                                    <iconify-icon icon="solar:home-2-bold-duotone"
                                                         class="fs-6"></iconify-icon>
                                                 </a>
                                             </li>
                                             <li class="breadcrumb-item" aria-current="page">
-                                                <span class="badge fw-medium fs-2 bg-primary-subtle text-primary">
+                                                <span class="badge rounded-pill fw-bold fs-2 bg-primary-subtle text-primary border border-primary-subtle px-3 py-2">
                                                     @yield('page-title')
                                                 </span>
                                             </li>

@@ -1,4 +1,4 @@
-@foreach ($projects as $project)
+@forelse ($projects as $project)
     <div class="col-lg-4 col-md-6 animate__animated animate__fadeInUp">
         <div class="category-card h-100 d-flex flex-column">
             <div class="position-relative" style="height: 200px; overflow: hidden;">
@@ -32,4 +32,12 @@
             </div>
         </div>
     </div>
-@endforeach
+@empty
+    <div class="col-12 py-5">
+        @include('partials.empty_state', [
+            'icon' => 'solar:minimalistic-magnifer-zoom-out-bold-duotone',
+            'title' => 'No Projects Found',
+            'description' => 'We couldn\'t find any projects matching your current filters. Try adjusting your search or selecting a different year.'
+        ])
+    </div>
+@endforelse

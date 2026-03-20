@@ -233,18 +233,12 @@
                         $('#results-count').addClass('opacity-0');
                     }
 
-                    if ($.trim(html) === '') {
+                    if ($.trim(html) === '' || $(html).find('.empty-state-wrapper').length > 0) {
                         $('#load-more').hide();
-                        $('#project-list').html(`
-                            <div class="col-12 py-5 text-center animate__animated animate__fadeIn">
-                                <iconify-icon icon="solar:minimalistic-magnifer-zoom-out-bold-duotone" class="text-muted mb-3" style="font-size: 5rem;"></iconify-icon>
-                                <h4 class="fw-bold text-muted">No Projects Found</h4>
-                                <p class="text-muted">Adjust your filters to discover more innovative work.</p>
-                            </div>
-                        `);
                     } else {
                         $('#load-more').removeClass('d-none').show();
                     }
+                    $('#project-list').html(html);
                 }
             });
         }

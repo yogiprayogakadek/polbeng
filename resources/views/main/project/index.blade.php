@@ -31,41 +31,90 @@
         </div>
     @endif
 
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title fw-semibold mb-4">Project List</h5>
-            <table id="table" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
-                <thead>
-                    <tr>
-                        <th data-priority="1">Thumbnail</th>
-                        <th data-priority="1">Project Title</th>
-                        <th>Category</th>
-                        <th data-priority="2">School Year</th>
-                        <th>Semester</th>
-                        <th>Detail</th>
-                        <th>Galleries</th>
-                        <th>Dosen</th>
-                        <th>Kaprodi</th>
-                        <th data-priority="3">Status</th>
-                        <th data-priority="1">Action</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+    <style>
+    .glass-panel {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        border-radius: 1.25rem;
+        box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.03);
+    }
 
+    .table thead th {
+        background: #f8fafc;
+        color: #475569;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+        padding: 1.25rem 1rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .table tbody tr {
+        transition: all 0.2s ease;
+    }
+
+    .table tbody tr:hover {
+        background-color: rgba(59, 130, 246, 0.03);
+        transform: scale(1.002);
+    }
+
+    .badge {
+        font-weight: 600;
+        padding: 0.5em 0.8em;
+    }
+</style>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card glass-panel border-0 mb-4 p-4">
+            <div class="card-body p-0">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 gap-3 px-1">
+                    <h4 class="fw-bold text-dark mb-0">Project Repository</h4>
+                    @if (auth()->user()->isAdmin() || auth()->user()->isPetugas())
+                        <a href="{{ route('project.create') }}" class="btn btn-primary rounded-pill px-4 d-flex align-items-center gap-2 shadow-sm">
+                            <iconify-icon icon="solar:add-circle-bold-duotone" width="20"></iconify-icon>
+                            Create New Project
+                        </a>
+                    @endif
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table align-middle" id="projectTable" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Thumbnail</th>
+                                <th>Project Title</th>
+                                <th>Category</th>
+                                <th>Year</th>
+                                <th>Semester</th>
+                                <th class="text-center">Detail</th>
+                                <th class="text-center">Galleries</th>
+                                <th>Dosen</th>
+                                <th>Kaprodi</th>
+                                <th>Final Status</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
+</div>
 @endsection
 
 @push('script')
-    <script src="https://bootstrapdemos.adminmart.com/matdash/dist/assets/libs/datatables.net/js/jquery.dataTables.min.js">
-    </script>
+    <script src="https://bootstrapdemos.adminmart.com/matdash/dist/assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.4.1/js/responsive.bootstrap5.min.js"></script>
     <script>
-        var table = $('#table').DataTable({
+        var table = $('#projectTable').DataTable({
             processing: true,
             serverSide: true,
             responsive: true,
@@ -97,13 +146,15 @@
                     data: 'project_detail',
                     name: 'project_detail',
                     orderable: false,
-                    searchable: false
+                    searchable: false,
+                    className: 'text-center'
                 },
                 {
                     data: 'galleries',
                     name: 'galleries',
                     orderable: false,
-                    searchable: false
+                    searchable: false,
+                    className: 'text-center'
                 },
                 {
                     data: 'dosen_status',
@@ -125,13 +176,12 @@
                     data: 'action',
                     name: 'action',
                     orderable: false,
-                    searchable: false
+                    searchable: false,
+                    className: 'text-end'
                 }
             ],
             drawCallback: function() {
-                // Re-initialize tooltips on every draw (pagination, search, etc.)
-                var tooltipTriggerList = [].slice.call(document.querySelectorAll(
-                    '[data-bs-toggle="tooltip"]'))
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
                 var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
                     return bootstrap.Tooltip.getOrCreateInstance(tooltipTriggerEl)
                 })

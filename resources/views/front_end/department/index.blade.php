@@ -179,12 +179,11 @@
         style="margin-top: -30px; border-radius: 40px 40px 0 0; z-index: 2; box-shadow: 0 -20px 40px rgba(0,0,0,0.02);">
         <div class="container">
             @if ($studyPrograms->isEmpty())
-                <div class="text-center py-10">
-                    <img src="{{ asset('assets/images/empty-state.svg') }}" alt="No data" class="img-fluid mb-4"
-                        style="max-width: 300px;">
-                    <h3 class="text-dark fw-bold mb-2">No Programs Found</h3>
-                    <p class="text-muted">We couldn't find any study programs for this department yet.</p>
-                </div>
+                @include('partials.empty_state', [
+                    'icon' => 'solar:school-bold-duotone',
+                    'title' => 'No Programs Found',
+                    'description' => "We couldn't find any study programs for this department yet. Please check back later or try a different search."
+                ])
             @else
                 <div class="accordion accordion-flush" id="accordionFlushExample">
                     @foreach ($studyPrograms as $index => $studyProgram)

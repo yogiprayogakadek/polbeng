@@ -1,3 +1,76 @@
+<style>
+    .side-mini-panel {
+        background: rgba(255, 255, 255, 0.8) !important;
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border-right: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .iconbar {
+        background: rgba(255, 255, 255, 0.6) !important;
+        border-right: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .mini-nav-item a {
+        border-radius: 12px;
+        margin: 6px 10px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        color: #64748b;
+    }
+
+    .mini-nav-item.active a, .mini-nav-item a:hover {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05));
+        color: #3b82f6;
+    }
+
+    .mini-nav-item.selected a {
+        background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+        color: white !important;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .sidebarmenu {
+        background: transparent !important;
+    }
+
+    .sidebar-link {
+        border-radius: 10px !important;
+        margin: 4px 12px !important;
+        transition: all 0.2s ease !important;
+        padding: 10px 15px !important;
+        color: #475569 !important;
+    }
+
+    .sidebar-link:hover {
+        background: rgba(59, 130, 246, 0.05) !important;
+        color: #3b82f6 !important;
+    }
+
+    .sidebar-link.active {
+        background: #3b82f6 !important;
+        color: white !important;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+    }
+
+    .sidebar-link.active iconify-icon {
+        color: white !important;
+    }
+
+    .nav-small-cap {
+        padding: 20px 25px 10px !important;
+        font-size: 0.75rem !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.1em !important;
+        color: #94a3b8 !important;
+        font-weight: 700 !important;
+    }
+
+    .sidebar-divider {
+        background: rgba(0, 0, 0, 0.05);
+        margin: 15px 20px;
+    }
+</style>
+
 <aside class="side-mini-panel with-vertical">
     <!-- ---------------------------------- -->
     <!-- Start Vertical Layout Sidebar -->

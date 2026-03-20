@@ -132,39 +132,180 @@
                         </div>
                     </div>
 
-                    <!-- Validation Status -->
+                    <style>
+                        .timeline-stepper {
+                            position: relative;
+                            padding-left: 3rem;
+                        }
+
+                        .timeline-stepper::before {
+                            content: '';
+                            position: absolute;
+                            left: 1rem;
+                            top: 0;
+                            bottom: 0;
+                            width: 2px;
+                            background: #e2e8f0;
+                        }
+
+                        .timeline-item {
+                            position: relative;
+                            padding-bottom: 2rem;
+                        }
+
+                        .timeline-item:last-child {
+                            padding-bottom: 0;
+                        }
+
+                        .timeline-icon {
+                            position: absolute;
+                            left: -2.6rem;
+                            width: 2.2rem;
+                            height: 2.2rem;
+                            background: white;
+                            border: 2px solid #e2e8f0;
+                            border-radius: 50%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            z-index: 1;
+                            transition: all 0.3s ease;
+                        }
+
+                        .timeline-item.active .timeline-icon {
+                            background: #3b82f6;
+                            border-color: #3b82f6;
+                            color: white;
+                            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+                        }
+
+                        .timeline-item.success .timeline-icon {
+                            background: #10b981;
+                            border-color: #10b981;
+                            color: white;
+                        }
+
+                        .timeline-item.danger .timeline-icon {
+                            background: #ef4444;
+                            border-color: #ef4444;
+                            color: white;
+                        }
+
+                        .timeline-content {
+                            padding-top: 0.2rem;
+                        }
+
+                        .timeline-title {
+                            font-size: 0.95rem;
+                            font-weight: 700;
+                            color: #1e293b;
+                            margin-bottom: 0.2rem;
+                        }
+
+                        .timeline-time {
+                            font-size: 0.8rem;
+                            color: #64748b;
+                        }
+
+                        .timeline-desc {
+                            font-size: 0.85rem;
+                            color: #475569;
+                            margin-top: 0.5rem;
+                        }
+                    </style>
+
+                    <!-- Validation Timeline -->
                     <div class="col-12">
-                        <div class="card shadow-sm rounded-3">
-                            <div class="card-body">
-                                <h5 class="fw-semibold mb-3"><i class="ti ti-checklist me-2"></i> Validation Status</h5>
-                                <div class="row text-center">
-                                    <div class="col-md-6 border-end">
-                                        <p class="text-muted mb-1">Dosen Pembimbing</p>
-                                        @if ($project->status === \App\Models\Project::STATUS_PENDING)
-                                            <span class="badge bg-warning-subtle text-warning fs-3">Pending</span>
-                                        @elseif ($project->status === \App\Models\Project::STATUS_REJECTED_DOSEN)
-                                            <span class="badge bg-danger-subtle text-danger fs-3">Rejected</span>
-                                        @else
-                                            <span class="badge bg-success-subtle text-success fs-3">Verified</span>
-                                        @endif
+                        <div class="card shadow-sm rounded-4 border-0 bg-light-subtle">
+                            <div class="card-body p-4">
+                                <h5 class="fw-bold mb-4 d-flex align-items-center gap-2">
+                                    <iconify-icon icon="solar:history-bold-duotone" class="text-primary"></iconify-icon>
+                                    Approval Journey
+                                </h5>
+
+                                <div class="timeline-stepper">
+                                    <!-- Step 1: Submission -->
+                                    <div class="timeline-item success">
+                                        <div class="timeline-icon">
+                                            <iconify-icon icon="solar:check-circle-bold"></iconify-icon>
+                                        </div>
+                                        <div class="timeline-content">
+                                            <div class="timeline-title">Project Submitted</div>
+                                            <div class="timeline-time">{{ $project->created_at->format('d M Y, H:i') }}</div>
+                                            <div class="timeline-desc">Initial submission by student for review.</div>
+                                        </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <p class="text-muted mb-1">Ketua Program Studi</p>
-                                        @if ($project->status === \App\Models\Project::STATUS_APPROVED)
-                                            <span class="badge bg-success-subtle text-success fs-3">Approved</span>
-                                        @elseif ($project->status === \App\Models\Project::STATUS_REJECTED_KAPRODI)
-                                            <span class="badge bg-danger-subtle text-danger fs-3">Rejected</span>
-                                        @else
-                                            <span class="badge bg-warning-subtle text-warning fs-3">Waiting</span>
-                                        @endif
+
+                                    <!-- Step 2: Dosen Verification -->
+                                    @php
+                                        $dosenStatusClass = '';
+                                        $dosenIcon = 'solar:clock-circle-bold';
+                                        if (in_array($project->status, [\App\Models\Project::STATUS_VERIFIED_DOSEN, \App\Models\Project::STATUS_APPROVED, \App\Models\Project::STATUS_REJECTED_KAPRODI])) {
+                                            $dosenStatusClass = 'success';
+                                            $dosenIcon = 'solar:shield-check-bold';
+                                        } elseif ($project->status === \App\Models\Project::STATUS_REJECTED_DOSEN) {
+                                            $dosenStatusClass = 'danger';
+                                            $dosenIcon = 'solar:close-circle-bold';
+                                        } elseif ($project->status === \App\Models\Project::STATUS_PENDING) {
+                                            $dosenStatusClass = 'active';
+                                        }
+                                    @endphp
+                                    <div class="timeline-item {{ $dosenStatusClass }}">
+                                        <div class="timeline-icon">
+                                            <iconify-icon icon="{{ $dosenIcon }}"></iconify-icon>
+                                        </div>
+                                        <div class="timeline-content">
+                                            <div class="timeline-title">Verification (Dosen Pembimbing)</div>
+                                            @if($dosenStatusClass == 'success' || $dosenStatusClass == 'danger')
+                                                <div class="timeline-time">{{ $project->updated_at->format('d M Y, H:i') }}</div>
+                                            @else
+                                                <div class="timeline-time text-warning fw-semibold">Pending Review</div>
+                                            @endif
+
+                                            @if($project->status === \App\Models\Project::STATUS_REJECTED_DOSEN)
+                                                <div class="alert alert-danger py-2 px-3 rounded-3 mt-2 mb-0 border-0 shadow-sm">
+                                                    <small class="fw-bold d-block mb-1">Rejection Reason:</small>
+                                                    <small class="mb-0">{{ $project->rejection_reason }}</small>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <!-- Step 3: Kaprodi Approval -->
+                                    @php
+                                        $kaprodiStatusClass = '';
+                                        $kaprodiIcon = 'solar:clock-circle-bold';
+                                        if ($project->status === \App\Models\Project::STATUS_APPROVED) {
+                                            $kaprodiStatusClass = 'success';
+                                            $kaprodiIcon = 'solar:verified-check-bold';
+                                        } elseif ($project->status === \App\Models\Project::STATUS_REJECTED_KAPRODI) {
+                                            $kaprodiStatusClass = 'danger';
+                                            $kaprodiIcon = 'solar:close-circle-bold';
+                                        } elseif ($project->status === \App\Models\Project::STATUS_VERIFIED_DOSEN) {
+                                            $kaprodiStatusClass = 'active';
+                                        }
+                                    @endphp
+                                    <div class="timeline-item {{ $kaprodiStatusClass }}">
+                                        <div class="timeline-icon">
+                                            <iconify-icon icon="{{ $kaprodiIcon }}"></iconify-icon>
+                                        </div>
+                                        <div class="timeline-content">
+                                            <div class="timeline-title">Final Approval (Kaprodi)</div>
+                                            @if($kaprodiStatusClass == 'success' || $kaprodiStatusClass == 'danger')
+                                                <div class="timeline-time">{{ $project->updated_at->format('d M Y, H:i') }}</div>
+                                            @else
+                                                <div class="timeline-time text-muted">Awaiting Verification</div>
+                                            @endif
+
+                                            @if($project->status === \App\Models\Project::STATUS_REJECTED_KAPRODI)
+                                                <div class="alert alert-danger py-2 px-3 rounded-3 mt-2 mb-0 border-0 shadow-sm">
+                                                    <small class="fw-bold d-block mb-1">Rejection Reason:</small>
+                                                    <small class="mb-0">{{ $project->rejection_reason }}</small>
+                                                </div>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
-                                @if($project->rejection_reason)
-                                    <div class="alert alert-danger mt-3 mb-0 rounded-3">
-                                        <h6 class="alert-heading fw-bold mb-1">Rejection Reason:</h6>
-                                        <p class="mb-0">{{ $project->rejection_reason }}</p>
-                                    </div>
-                                @endif
                             </div>
                         </div>
                     </div>
