@@ -107,6 +107,86 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+
+        .year-dropdown-btn {
+            background: white;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50px;
+            padding: 12px 24px;
+            font-weight: 600;
+            color: #64748b;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            min-width: 180px;
+            justify-content: space-between;
+        }
+
+        .year-dropdown-btn:hover {
+            border-color: #3b82f6;
+            color: #3b82f6;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.1);
+        }
+
+        .year-dropdown-btn:after {
+            display: none;
+        }
+
+        .dropdown-menu-custom {
+            border: none;
+            border-radius: 20px;
+            padding: 12px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            backdrop-filter: blur(15px);
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            margin-top: 12px !important;
+            max-height: 300px;
+            overflow-y: auto;
+            width: 100%;
+            min-width: 220px;
+            z-index: 1050;
+        }
+
+        .dropdown-item-custom {
+            border-radius: 12px;
+            padding: 10px 16px;
+            color: #64748b;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            margin-bottom: 4px;
+            cursor: pointer;
+        }
+
+        .dropdown-item-custom:last-child {
+            margin-bottom: 0;
+        }
+
+        .dropdown-item-custom:hover {
+            background: rgba(59, 130, 246, 0.05);
+            color: #3b82f6;
+            border-color: rgba(59, 130, 246, 0.1);
+        }
+
+        .dropdown-item-custom.active {
+            background: var(--primary-gradient) !important;
+            color: white !important;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        #load-more {
+            transition: all 0.3s ease;
+        }
+
+        #load-more:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+        }
     </style>
 
     @php
@@ -179,12 +259,28 @@
                     </div>
                 </div>
                 <div class="col-lg-6">
-                    <div class="d-flex align-items-center gap-3 overflow-auto pb-2 scroll-hide">
-                        <span class="text-muted fw-bold text-nowrap me-2"><i class="ti ti-filter me-1"></i> Year:</span>
-                        <button class="filter-pill active year-filter" data-year="">All Time</button>
-                        @foreach ($allYears as $year)
-                            <button class="filter-pill year-filter" data-year="{{ $year }}">{{ $year }}</button>
-                        @endforeach
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="text-muted fw-bold text-nowrap"><i class="ti ti-filter me-1"></i> Year:</span>
+                        <div class="dropdown">
+                            <button class="year-dropdown-btn dropdown-toggle" type="button" id="yearDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span id="selected-year-text">All Time</span>
+                                <i class="ti ti-chevron-down opacity-50"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-custom shadow-lg border-0" aria-labelledby="yearDropdown">
+                                <li>
+                                    <a class="dropdown-item dropdown-item-custom active year-filter" data-year="" href="javascript:void(0)">
+                                        <i class="ti ti-calendar-event me-2"></i> All Time
+                                    </a>
+                                </li>
+                                @foreach ($allYears as $year)
+                                    <li>
+                                        <a class="dropdown-item dropdown-item-custom year-filter" data-year="{{ $year }}" href="javascript:void(0)">
+                                            <i class="ti ti-calendar me-2"></i> {{ $year }}
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -210,6 +306,7 @@
     <script>
         let page = 1;
         let selectedYear = '';
+        let isLoading = false;
         const projectCategoryID = '{{ $projectCategoryID }}';
 
         function updateFilters() {
@@ -233,20 +330,26 @@
                         $('#results-count').addClass('opacity-0');
                     }
 
-                    if ($.trim(html) === '' || $(html).find('.empty-state-wrapper').length > 0) {
-                        $('#load-more').hide();
+                    const $html = $('<div>').append(html);
+                    if ($.trim(html) === '' || $html.find('.empty-state-wrapper').length > 0) {
+                        $('#load-more').addClass('d-none').hide();
                     } else {
                         $('#load-more').removeClass('d-none').show();
                     }
-                    $('#project-list').html(html);
                 }
             });
         }
 
-        $('.year-filter').on('click', function() {
+        $('.year-filter').on('click', function(e) {
+            e.preventDefault();
             $('.year-filter').removeClass('active');
             $(this).addClass('active');
             selectedYear = $(this).data('year');
+            
+            // Update dropdown text
+            const yearText = selectedYear === '' ? 'All Time' : selectedYear;
+            $('#selected-year-text').text(yearText);
+            
             updateFilters();
         });
 
@@ -256,6 +359,11 @@
         });
 
         function loadMoreProjects() {
+            if (isLoading) return;
+            
+            isLoading = true;
+            $('#load-more').prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Loading...');
+            
             page++;
             const query = $('#search-project').val();
             $.ajax({
@@ -270,9 +378,13 @@
                 success: function(html) {
                     if ($.trim(html) !== '') {
                         $('#project-list').append(html);
+                        $('#load-more').prop('disabled', false).html('Load More Projects');
                     } else {
-                        $('#load-more').hide();
+                        $('#load-more').addClass('d-none').hide();
                     }
+                },
+                complete: function() {
+                    isLoading = false;
                 }
             });
         }
@@ -283,7 +395,7 @@
 
         $(window).on('scroll', function() {
             if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
-                if (!$('#load-more').hasClass('d-none') && $('#load-more').is(':visible')) {
+                if (!$('#load-more').hasClass('d-none') && $('#load-more').is(':visible') && !isLoading) {
                     loadMoreProjects();
                 }
             }

@@ -36,6 +36,11 @@ class ProjectController extends Controller
     public function loadMore(Request $request)
     {
         $projects = $this->getFilteredProjects($request);
+        
+        if ($projects->isEmpty()) {
+            return response()->json('');
+        }
+
         $html = view('front_end.project.partials.project_card', compact('projects'))->render();
         return response()->json($html);
     }
