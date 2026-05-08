@@ -8,6 +8,7 @@ use App\Http\Requests\ProjectCategoryUpdateRequest;
 use App\Models\ProjectCategory;
 use App\Models\StudyProgram;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProjectCategoryController extends Controller
 {
@@ -35,15 +36,22 @@ class ProjectCategoryController extends Controller
         $data = $request->validated();
 
         try {
-            $projectCategory = [
+            $thumbnailPath = null;
+            if ($request->hasFile('thumbnail')) {
+                $thumbnailPath = $request->file('thumbnail')->store('project_categories', 'public');
+            }
+
+            ProjectCategory::create([
                 'study_program_id' => $data['study_program_id'],
                 'project_category_name' => $data['project_category_name'],
-            ];
-
-            ProjectCategory::create($projectCategory);
+                'thumbnail' => $thumbnailPath,
+            ]);
 
             return redirect()->back()->with('success', 'Project category data was successfully saved.');
         } catch (\Throwable $th) {
+            if (isset($thumbnailPath)) {
+                Storage::disk('public')->delete($thumbnailPath);
+            }
             return back()->withInput()->with('error', 'There is an error: ' . $th->getMessage());
         }
     }
@@ -68,9 +76,19 @@ class ProjectCategoryController extends Controller
 
         try {
             $projectCategory = ProjectCategory::findOrFail($id);
+            
+            $thumbnailPath = $projectCategory->thumbnail;
+            if ($request->hasFile('thumbnail')) {
+                if ($thumbnailPath) {
+                    Storage::disk('public')->delete($thumbnailPath);
+                }
+                $thumbnailPath = $request->file('thumbnail')->store('project_categories', 'public');
+            }
+
             $projectCategory->update([
                 'study_program_id' => $data['study_program_id'],
                 'project_category_name' => $data['project_category_name'],
+                'thumbnail' => $thumbnailPath,
             ]);
             return redirect()->route('projectCategory.index')->with('success', 'Project category data was successfully saved.');
         } catch (\Throwable $th) {

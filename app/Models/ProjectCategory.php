@@ -12,7 +12,7 @@ class ProjectCategory extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['uuid', 'study_program_id', 'project_category_name', 'is_active'];
+    protected $fillable = ['uuid', 'study_program_id', 'project_category_name', 'thumbnail', 'is_active'];
 
     public function studyProgram()
     {

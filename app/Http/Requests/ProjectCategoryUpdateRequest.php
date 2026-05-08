@@ -25,6 +25,7 @@ class ProjectCategoryUpdateRequest extends FormRequest
                     })
                     ->ignore($this->id),
             ],
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ];
     }
 

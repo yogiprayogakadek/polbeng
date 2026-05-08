@@ -9,7 +9,8 @@
 @section('page-title', 'Project Category')
 
 @section('content')
-    <form action="{{ route('projectCategory.update', $projectCategory->id) }}" method="POST">
+    <form action="{{ route('projectCategory.update', $projectCategory->id) }}" method="POST"
+        enctype="multipart/form-data">
         @csrf
         @method('PUT')
         {{-- Alert Success --}}
@@ -62,6 +63,26 @@
                                 placeholder="Enter project category name"
                                 value="{{ old('project_category_name', $projectCategory->project_category_name) }}">
                             @error('project_category_name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    {{-- Thumbnail --}}
+                    <div class="col-md-12">
+                        <div class="mb-3">
+                            <label for="thumbnail" class="form-label">Thumbnail Image</label>
+                            @if ($projectCategory->thumbnail)
+                                <div class="mb-2">
+                                    <img src="{{ asset('storage/' . $projectCategory->thumbnail) }}" alt="Thumbnail"
+                                        class="img-thumbnail" style="max-height: 150px;">
+                                </div>
+                            @endif
+                            <input type="file" id="thumbnail" name="thumbnail"
+                                class="form-control @error('thumbnail') is-invalid @enderror" accept="image/*">
+                            <div class="form-text">Accepted formats: jpeg, png, jpg, webp. Max size: 2MB. Leave blank to
+                                keep current.</div>
+                            @error('thumbnail')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>

@@ -24,6 +24,7 @@ class ProjectCategoryStoreRequest extends FormRequest
                         return $query->where('study_program_id', $this->study_program_id);
                     }),
             ],
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ];
     }
 

@@ -12,7 +12,7 @@
 @section('page-title', 'Project Category')
 
 @section('content')
-    <form action="{{ route('projectCategory.store') }}" method="POST">
+    <form action="{{ route('projectCategory.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         {{-- Success Alert --}}
         @if (session('success'))
@@ -70,6 +70,19 @@
                                 class="form-control @error('project_category_name') is-invalid @enderror"
                                 placeholder="Enter project category name" value="{{ old('project_category_name') }}">
                             @error('project_category_name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    {{-- Thumbnail --}}
+                    <div class="col-md-12">
+                        <div class="mb-3">
+                            <label for="thumbnail" class="form-label">Thumbnail Image</label>
+                            <input type="file" id="thumbnail" name="thumbnail"
+                                class="form-control @error('thumbnail') is-invalid @enderror" accept="image/*">
+                            <div class="form-text">Accepted formats: jpeg, png, jpg, webp. Max size: 2MB.</div>
+                            @error('thumbnail')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
