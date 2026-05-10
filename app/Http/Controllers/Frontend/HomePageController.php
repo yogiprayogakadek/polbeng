@@ -45,8 +45,8 @@ class HomePageController extends Controller
             ->leftJoin('study_programs', 'project_categories.study_program_id', '=', 'study_programs.id')
             ->where('study_programs.department_id', $departmentID)
             ->whereNull('project_categories.deleted_at')
+            ->where('project_categories.is_active', true)
             ->groupBy('project_categories.id', 'project_categories.project_category_name', 'project_categories.uuid')
-            ->having('total', '>', 0)
             ->get();
 
 
