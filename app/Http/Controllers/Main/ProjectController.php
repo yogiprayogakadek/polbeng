@@ -29,8 +29,15 @@ class ProjectController extends Controller
     public function projectData(Request $request)
     {
         if ($request->ajax()) {
-            $projects = Project::with(['projectCategory.studyProgram', 'detail'])
-                ->select('projects.*');
+            $projects = Project::with([
+                'projectCategory' => function ($query) {
+                    $query->withTrashed();
+                },
+                'projectCategory.studyProgram' => function ($query) {
+                    $query->withTrashed();
+                },
+                'detail'
+            ])->select('projects.*');
 
             return DataTables::eloquent($projects)
                 ->addIndexColumn()
@@ -39,7 +46,9 @@ class ProjectController extends Controller
                     return '<img src="' . asset('storage/' . $project->thumbnail) . '" width="70" class="img-thumbnail">';
                 })
                 ->addColumn('category_name', function ($project) {
-                    return $project->projectCategory->studyProgram->study_program_name . ' - ' . $project->projectCategory->project_category_name;
+                    $programName = $project->projectCategory?->studyProgram?->study_program_name ?? 'N/A';
+                    $categoryName = $project->projectCategory?->project_category_name ?? 'N/A';
+                    return $programName . ' - ' . $categoryName;
                 })
                 ->addColumn('project_detail', function ($project) {
                     return '<button class="btn btn-outline-primary modal-btn"

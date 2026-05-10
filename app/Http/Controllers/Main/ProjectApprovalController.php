@@ -19,7 +19,15 @@ class ProjectApprovalController extends Controller
     {
         if ($request->ajax()) {
             $status = $request->get('status');
-            $projects = Project::with(['projectCategory.studyProgram', 'dosenPembimbing'])
+            $projects = Project::with([
+                'projectCategory' => function ($query) {
+                    $query->withTrashed();
+                },
+                'projectCategory.studyProgram' => function ($query) {
+                    $query->withTrashed();
+                },
+                'dosenPembimbing'
+            ])
                 ->where('dosen_pembimbing_id', auth()->id())
                 ->when($status, function ($query) use ($status) {
                     if ($status === 'pending') {
@@ -38,8 +46,10 @@ class ProjectApprovalController extends Controller
             return DataTables::eloquent($projects)
                 ->addIndexColumn()
                 ->addColumn('category_name', function ($project) {
-                    return '<span class="fw-semibold text-dark">' . $project->projectCategory->studyProgram->study_program_name . '</span><br>' .
-                           '<span class="text-muted fs-2">' . $project->projectCategory->project_category_name . '</span>';
+                    $programName = $project->projectCategory?->studyProgram?->study_program_name ?? 'N/A';
+                    $categoryName = $project->projectCategory?->project_category_name ?? 'N/A';
+                    return '<span class="fw-semibold text-dark">' . $programName . '</span><br>' .
+                           '<span class="text-muted fs-2">' . $categoryName . '</span>';
                 })
                 ->addColumn('status_label', function ($project) {
                     $badges = [
@@ -99,7 +109,15 @@ class ProjectApprovalController extends Controller
     {
         if ($request->ajax()) {
             $status = $request->get('status');
-            $projects = Project::with(['projectCategory.studyProgram', 'dosenPembimbing'])
+            $projects = Project::with([
+                'projectCategory' => function ($query) {
+                    $query->withTrashed();
+                },
+                'projectCategory.studyProgram' => function ($query) {
+                    $query->withTrashed();
+                },
+                'dosenPembimbing'
+            ])
                 ->when($status, function ($query) use ($status) {
                     if ($status === 'pending_dosen') {
                         $query->where('status', Project::STATUS_PENDING);
@@ -114,8 +132,10 @@ class ProjectApprovalController extends Controller
             return DataTables::eloquent($projects)
                 ->addIndexColumn()
                 ->addColumn('category_name', function ($project) {
-                    return '<span class="fw-semibold text-dark">' . $project->projectCategory->studyProgram->study_program_name . '</span><br>' .
-                           '<span class="text-muted fs-2">' . $project->projectCategory->project_category_name . '</span>';
+                    $programName = $project->projectCategory?->studyProgram?->study_program_name ?? 'N/A';
+                    $categoryName = $project->projectCategory?->project_category_name ?? 'N/A';
+                    return '<span class="fw-semibold text-dark">' . $programName . '</span><br>' .
+                           '<span class="text-muted fs-2">' . $categoryName . '</span>';
                 })
                 ->addColumn('dosen_pembimbing', function ($project) {
                     return '<div class="d-flex align-items-center">
