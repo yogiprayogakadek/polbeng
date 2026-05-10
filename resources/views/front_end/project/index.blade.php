@@ -233,7 +233,7 @@
                 <div class="col-lg-8 animate__animated animate__fadeInLeft">
                     <h1 class="display-5 fw-bolder text-dark mb-2">{{ $projectCategory->project_category_name }}</h1>
                     <p class="fs-4 text-muted mb-0">
-                        {{ $projectCategory->studyProgram->study_program_name }} • {{ $projectCategory->studyProgram->department->department_name }}
+                        {{ $projectCategory->studyProgram->study_program_name ?? 'N/A' }} • {{ $projectCategory->studyProgram?->department->department_name ?? 'N/A' }}
                     </p>
                 </div>
                 <div class="col-lg-4 text-lg-end mt-4 mt-lg-0 animate__animated animate__fadeInRight">

@@ -14,7 +14,11 @@ class ProjectController extends Controller
 {
     public function index($uuid)
     {
-        $projectCategory = ProjectCategory::with('studyProgram.department')->where('uuid', $uuid)->firstOrFail();
+        $projectCategory = ProjectCategory::withTrashed()->with(['studyProgram' => function ($q) {
+            $q->withTrashed();
+        }, 'studyProgram.department' => function ($q) {
+            $q->withTrashed();
+        }])->where('uuid', $uuid)->firstOrFail();
         $projectCategoryID = $projectCategory->id;
 
         $projects = Project::with(['projectCategory.studyProgram.department', 'detail'])
@@ -79,7 +83,9 @@ class ProjectController extends Controller
 
     public function detail($slug, $uuid)
     {
-        $project = Project::with('detail.galleries')->where('uuid', $uuid)->firstOrFail();
+        $project = Project::withTrashed()->with(['detail.galleries', 'projectCategory' => function ($q) {
+            $q->withTrashed();
+        }])->where('uuid', $uuid)->firstOrFail();
         $relatedProjects = Project::where(
             'project_category_id',
             $project->project_category_id,
@@ -118,6 +124,7 @@ class ProjectController extends Controller
             })
             ->leftJoin('study_programs', 'project_categories.study_program_id', '=', 'study_programs.id')
             ->where('study_programs.id', $id)
+            ->whereNull('project_categories.deleted_at')
             ->groupBy('project_categories.id', 'project_categories.project_category_name', 'project_categories.uuid')
             ->having('total', '>', 0)
             ->get();

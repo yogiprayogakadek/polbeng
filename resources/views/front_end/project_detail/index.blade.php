@@ -215,7 +215,7 @@
                                             <div>
                                                 <div class="small text-uppercase tracking-wider fw-bold">Department</div>
                                                 <div class="text-dark fw-semibold">
-                                                    {{ $project->projectCategory->studyProgram->department->department_name }}
+                                                    {{ $project->projectCategory?->studyProgram?->department->department_name ?? 'N/A' }}
                                                 </div>
                                             </div>
                                         </div>
@@ -227,7 +227,7 @@
                                             <div>
                                                 <div class="small text-uppercase tracking-wider fw-bold">Study Program</div>
                                                 <div class="text-dark fw-semibold">
-                                                    {{ $project->projectCategory->studyProgram->study_program_name }}
+                                                    {{ $project->projectCategory?->studyProgram?->study_program_name ?? 'N/A' }}
                                                 </div>
                                             </div>
                                         </div>
