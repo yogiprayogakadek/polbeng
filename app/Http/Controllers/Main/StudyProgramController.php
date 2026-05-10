@@ -13,7 +13,9 @@ class StudyProgramController extends Controller
 {
     public function index()
     {
-        $data = StudyProgram::with('department')->get();
+        $data = StudyProgram::with(['department' => function ($query) {
+            $query->withTrashed();
+        }])->get();
 
         return view('main.study_program.index', compact('data'));
     }
@@ -116,7 +118,9 @@ class StudyProgramController extends Controller
 
     public function showRestore()
     {
-        $data = StudyProgram::onlyTrashed()->get();
+        $data = StudyProgram::onlyTrashed()->with(['department' => function ($query) {
+            $query->withTrashed();
+        }])->get();
         // dd($data[0]->id);
         return view('main.study_program.restore', compact('data'));
     }

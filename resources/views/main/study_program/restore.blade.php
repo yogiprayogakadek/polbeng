@@ -47,7 +47,7 @@
                                             height="1em"></iconify-icon>
                                     </button>
                                 </td>
-                                <td>{{ $data->department->department_code . ' - ' . $data->department->department_name }}
+                                <td>{{ ($data->department->department_code ?? '-') . ' - ' . ($data->department->department_name ?? 'N/A') }}
                                 </td>
                                 <td>{{ $data->study_program_code }}</td>
                                 <td>{{ $data->study_program_name }}</td>

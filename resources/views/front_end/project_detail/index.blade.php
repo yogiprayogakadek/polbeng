@@ -162,8 +162,16 @@
 @section('content')
     {{-- HERO SECTION --}}
     <section class="hero-section">
+        @php
+            $heroThumbnail = $project->thumbnail;
+            if ($heroThumbnail && !Str::startsWith($heroThumbnail, ['http://', 'https://'])) {
+                $heroThumbnail = asset('storage/' . $heroThumbnail);
+            } elseif (!$heroThumbnail) {
+                $heroThumbnail = asset('assets/images/logo/main-logo.png');
+            }
+        @endphp
         <div class="hero-bg-blur"
-            style="background-image: url('{{ $project->thumbnail ? asset('storage/' . $project->thumbnail) : asset('assets/images/logo/main-logo.png') }}');">
+            style="background-image: url('{{ $heroThumbnail }}');">
         </div>
         <div class="container position-relative z-1">
             <nav aria-label="breadcrumb" class="mb-5 animate__animated animate__fadeInDown">
@@ -299,15 +307,21 @@
                                 <div class="col-lg-5">
                                     <h2 class="section-title fs-4 fw-bold text-dark mb-4">Project Poster</h2>
                                     @if($project->detail->poster_path)
+                                    @php
+                                        $posterPath = $project->detail->poster_path;
+                                        if ($posterPath && !Str::startsWith($posterPath, ['http://', 'https://'])) {
+                                            $posterPath = asset('storage/' . $posterPath);
+                                        }
+                                    @endphp
                                     <div class="poster-container mb-3">
-                                        <a href="{{ asset('storage/' . $project->detail->poster_path) }}" class="glightbox" data-gallery="project-poster">
-                                            <img src="{{ asset('storage/' . $project->detail->poster_path) }}" 
+                                        <a href="{{ $posterPath }}" class="glightbox" data-gallery="project-poster">
+                                            <img src="{{ $posterPath }}" 
                                                 class="w-100 h-100 object-fit-cover"
                                                 alt="Project Poster" loading="lazy">
                                         </a>
                                     </div>
                                     <div class="text-center">
-                                        <a href="{{ asset('storage/' . $project->detail->poster_path) }}"
+                                        <a href="{{ $posterPath }}"
                                             class="btn btn-sm btn-light text-primary rounded-pill px-4 fw-bold glightbox"
                                             data-gallery="project-poster">
                                             <i class="ti ti-zoom-in me-1"></i> Expand Poster
@@ -338,11 +352,17 @@
             </div>
             <div class="row g-4 justify-content-center">
                 @foreach ($project->detail->galleries as $gallery)
+                    @php
+                        $galleryPath = $gallery->image_path;
+                        if ($galleryPath && !Str::startsWith($galleryPath, ['http://', 'https://'])) {
+                            $galleryPath = asset('storage/' . $galleryPath);
+                        }
+                    @endphp
                     <div class="col-6 col-md-4 col-lg-3">
-                        <a href="{{ asset('storage/' . $gallery->image_path) }}" 
+                        <a href="{{ $galleryPath }}" 
                            class="glightbox d-block" 
                            data-gallery="project-gallery">
-                            <img src="{{ asset('storage/' . $gallery->image_path) }}" 
+                            <img src="{{ $galleryPath }}" 
                                  class="gallery-img shadow-sm rounded-4" 
                                  alt="Gallery Image {{ $loop->iteration }}" 
                                  loading="lazy">

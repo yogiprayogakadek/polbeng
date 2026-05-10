@@ -2,7 +2,15 @@
     <div class="col-lg-4 col-md-6 animate__animated animate__fadeInUp">
         <div class="category-card h-100 d-flex flex-column">
             <div class="position-relative" style="height: 200px; overflow: hidden;">
-                <img src="{{ $project->thumbnail ? asset('storage/' . $project->thumbnail) : asset('assets/images/logo/main-logo.png') }}"
+                @php
+                    $thumbnailUrl = $project->thumbnail;
+                    if ($thumbnailUrl && !Str::startsWith($thumbnailUrl, ['http://', 'https://'])) {
+                        $thumbnailUrl = asset('storage/' . $thumbnailUrl);
+                    } elseif (!$thumbnailUrl) {
+                        $thumbnailUrl = asset('assets/images/logo/main-logo.png');
+                    }
+                @endphp
+                <img src="{{ $thumbnailUrl }}"
                     alt="{{ $project->project_title }}" class="w-100 h-100 object-fit-cover transition-all"
                     loading="lazy">
                 <div class="category-badge shadow-sm">

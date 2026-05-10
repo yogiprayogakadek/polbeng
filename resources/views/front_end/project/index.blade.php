@@ -208,9 +208,14 @@
             'Concept Art' => '1605301091855-d60dec69e8bb',
         ];
         $photoId = $categoryImages[$projectCategory->project_category_name] ?? '1451187580459-43490279c0fa';
-        $heroImage = $projectCategory->thumbnail 
-            ? asset('storage/' . $projectCategory->thumbnail) 
-            : "https://images.unsplash.com/photo-{$photoId}?auto=format&fit=crop&w=1200&q=80";
+        $thumbnail = $projectCategory->thumbnail;
+        if ($thumbnail && !Str::startsWith($thumbnail, ['http://', 'https://'])) {
+            $heroImage = asset('storage/' . $thumbnail);
+        } elseif ($thumbnail) {
+            $heroImage = $thumbnail;
+        } else {
+            $heroImage = "https://images.unsplash.com/photo-{$photoId}?auto=format&fit=crop&w=1200&q=80";
+        }
     @endphp
 
     <section class="hero-section">

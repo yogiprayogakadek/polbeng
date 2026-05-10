@@ -88,15 +88,98 @@ class ProjectSeeder extends Seeder
         $localPoster = 'assets/images/projects/dummy_datas/posters/sample.png';
         $localGallery = 'assets/images/projects/dummy_datas/galleries/sample.png';
 
-        // Mapping kategori ke konten Bahasa Indonesia
+        // Mapping kategori ke konten Bahasa Indonesia dan ID gambar Unsplash
         $categoryData = [
             'Aplikasi Web' => [
                 'keywords' => ['E-Commerce', 'Sistem Informasi', 'Blog', 'Portal Berita', 'Dashboard'],
                 'tech' => ['Laravel', 'React', 'Vue.js', 'Node.js', 'Django'],
-                'videos' => ['k1BneeJTDcU', 'PkZNo7MFNFg', 'DLX62G4lc44']
+                'videos' => ['k1BneeJTDcU', 'PkZNo7MFNFg', 'DLX62G4lc44'],
+                'imageId' => '1498050108023-c5249f4df085'
             ],
-            // Data kategori lainnya tetap sama...
-            // (tambahkan mapping untuk semua kategori yang ada)
+            'Aplikasi Mobile' => [
+                'keywords' => ['Tracking', 'Social Media', 'Task Manager', 'Health App', 'Education'],
+                'tech' => ['Flutter', 'React Native', 'Kotlin', 'Swift', 'Ionic'],
+                'videos' => ['-p2Nn6A2Vio', 'PkZNo7MFNFg', 'DLX62G4lc44'],
+                'imageId' => '1512941937669-90bcdf591782'
+            ],
+            'Keamanan Siber' => [
+                'keywords' => ['Penetration Testing', 'Network Security', 'Cryptography', 'Audit', 'Forensic'],
+                'tech' => ['Python', 'Kali Linux', 'Wireshark', 'Metasploit', 'Nmap'],
+                'videos' => ['_0_S3y-QeG0', 'PkZNo7MFNFg', 'DLX62G4lc44'],
+                'imageId' => '1550751827-4bd374c3f58b'
+            ],
+            '3D Aset' => [
+                'keywords' => ['Character', 'Environment', 'Weapon', 'Vehicle', 'Architecture'],
+                'tech' => ['Blender', 'ZBrush', 'Maya', 'Substance Painter', 'Unity'],
+                'videos' => ['PkZNo7MFNFg', 'DLX62G4lc44', 'k1BneeJTDcU'],
+                'imageId' => '1616469829581-73993eb86b02'
+            ],
+            'Animasi 2D 3D' => [
+                'keywords' => ['Short Film', 'Commercial', 'Education', 'Tutorial', 'Music Video'],
+                'tech' => ['Toon Boom', 'After Effects', 'Blender', 'Cinema 4D'],
+                'videos' => ['PkZNo7MFNFg', 'DLX62G4lc44', 'k1BneeJTDcU'],
+                'imageId' => '1550745165-9bc0b252726f'
+            ],
+            'Motion Graphic' => [
+                'keywords' => ['Title Sequence', 'Infographic', 'Explainer', 'Branding', 'Social Media'],
+                'tech' => ['After Effects', 'Cinema 4D', 'Illustrator', 'Premiere Pro'],
+                'videos' => ['PkZNo7MFNFg', 'DLX62G4lc44', 'k1BneeJTDcU'],
+                'imageId' => '1558655146-d09347e92766'
+            ],
+            'Augmented Reality' => [
+                'keywords' => ['Education', 'Tourism', 'Marketing', 'Instructional', 'Game'],
+                'tech' => ['Unity', 'Vuforia', 'ARCore', 'ARKit', 'WebAR'],
+                'videos' => ['PkZNo7MFNFg', 'DLX62G4lc44', 'k1BneeJTDcU'],
+                'imageId' => '1478416272538-5f7e51dc5400'
+            ],
+            'Virtual Reality' => [
+                'keywords' => ['Simulation', 'Training', 'Therapy', 'Tourism', 'Education'],
+                'tech' => ['Unity', 'Unreal Engine', 'Oculus SDK', 'OpenXR'],
+                'videos' => ['PkZNo7MFNFg', 'DLX62G4lc44', 'k1BneeJTDcU'],
+                'imageId' => '1592477342004-bd7ba780f2b3'
+            ],
+            'Game' => [
+                'keywords' => ['Platformer', 'RPG', 'Puzzle', 'Strategy', 'Shooter'],
+                'tech' => ['Unity', 'Unreal Engine', 'Godot', 'Construct 3', 'C#'],
+                'videos' => ['PkZNo7MFNFg', 'DLX62G4lc44', 'k1BneeJTDcU'],
+                'imageId' => '1493711662062-fa541adb3fc8'
+            ],
+            'ERP & Pengembangan Aplikasi' => [
+                'keywords' => ['Enterprise Resource Planning', 'Business Intelligence', 'HRM', 'Inventory'],
+                'tech' => ['Odoo', 'SAP', 'Python', 'PostgreSQL', 'Java'],
+                'videos' => ['PkZNo7MFNFg', 'DLX62G4lc44', 'k1BneeJTDcU'],
+                'imageId' => '1460925895917-afdab827c52f'
+            ],
+            'Data Mining' => [
+                'keywords' => ['Sentiment Analysis', 'Prediction', 'Classification', 'Clustering', 'Scraping'],
+                'tech' => ['Python', 'R', 'Scikit-Learn', 'TensorFlow', 'Pandas'],
+                'videos' => ['PkZNo7MFNFg', 'DLX62G4lc44', 'k1BneeJTDcU'],
+                'imageId' => '1551288049-bbda48336202'
+            ],
+            'Desain Grafis' => [
+                'keywords' => ['Visual Identity', 'Packaging', 'Poster', 'Layout', 'Typeface'],
+                'tech' => ['Photoshop', 'Illustrator', 'InDesign', 'Figma', 'Canva'],
+                'videos' => ['PkZNo7MFNFg', 'DLX62G4lc44', 'k1BneeJTDcU'],
+                'imageId' => '1626785774573-4b799315f30d'
+            ],
+            'Ilustrasi' => [
+                'keywords' => ['Digital Painting', 'Vector Art', 'Children Book', 'Comic', 'Storyboard'],
+                'tech' => ['Clip Studio Paint', 'Procreate', 'Photoshop', 'Illustrator'],
+                'videos' => ['PkZNo7MFNFg', 'DLX62G4lc44', 'k1BneeJTDcU'],
+                'imageId' => '1618005182384-a83a8bd57fbe'
+            ],
+            'Video Live-Action' => [
+                'keywords' => ['Documentary', 'Short Movie', 'Commercial', 'Music Video', 'Profile'],
+                'tech' => ['Premiere Pro', 'DaVinci Resolve', 'Final Cut Pro', 'After Effects'],
+                'videos' => ['PkZNo7MFNFg', 'DLX62G4lc44', 'k1BneeJTDcU'],
+                'imageId' => '1492724441997-5dc865305da7'
+            ],
+            'Concept Art' => [
+                'keywords' => ['Environment Design', 'Character Design', 'Prop Design', 'Visual Storytelling'],
+                'tech' => ['Photoshop', 'Corel Painter', 'Krita', 'Wacom'],
+                'videos' => ['PkZNo7MFNFg', 'DLX62G4lc44', 'k1BneeJTDcU'],
+                'imageId' => '1605301091855-d60dec69e8bb'
+            ],
         ];
 
         $projectIdCounter = 1000;
@@ -129,14 +212,18 @@ class ProjectSeeder extends Seeder
                     $rejectionReason = $faker->sentence(10);
                 }
 
-                // Buat project dengan gambar lokal
+                // Generate valid image URL
+                $imageId = $categoryInfo['imageId'];
+                $imageUrl = "https://images.unsplash.com/photo-{$imageId}?auto=format&fit=crop&w=800&q=80";
+
+                // Buat project dengan gambar Unsplash
                 $project = Project::create([
                     'project_category_id' => $category->id,
                     'dosen_pembimbing_id' => $dosens->random()->id,
                     'project_title' => $projectTitle,
                     'school_year' => "$startYear/$endYear",
                     'semester' => $faker->randomElement(['Ganjil', 'Genap']),
-                    'thumbnail' => $localThumbnail,
+                    'thumbnail' => $imageUrl,
                     'status' => $status,
                     'rejection_reason' => $rejectionReason,
                 ]);
@@ -158,21 +245,24 @@ class ProjectSeeder extends Seeder
                     array_values(array_diff($categoryInfo['videos'], [$trailerVideoId]))
                 );
 
-                // Buat project detail dengan poster lokal
+                // Buat project detail dengan poster (menggunakan Unsplash dengan seed berbeda)
+                $posterUrl = "https://images.unsplash.com/photo-{$imageId}?auto=format&fit=crop&w=1200&q=80&sig=" . $faker->numberBetween(1, 1000);
+                
                 $projectDetail = ProjectDetail::create([
                     'project_id' => $project->id,
                     'members' => json_encode($members),
                     'description' => $description,
                     'video_trailer_url' => 'https://www.youtube.com/watch?v=' . $trailerVideoId,
                     'presentation_video_url' => 'https://www.youtube.com/watch?v=' . $presentationVideoId,
-                    'poster_path' => $localPoster,
+                    'poster_path' => $posterUrl,
                 ]);
 
-                // Buat galeri dengan gambar lokal (3-5 gambar)
+                // Buat galeri dengan gambar Unsplash (3-5 gambar)
                 foreach (range(1, $faker->numberBetween(3, 5)) as $galleryItem) {
+                    $galleryUrl = "https://images.unsplash.com/photo-{$imageId}?auto=format&fit=crop&w=600&q=80&sig=" . $faker->numberBetween(1001, 2000) . $galleryItem;
                     ProjectGallery::create([
                         'project_detail_id' => $projectDetail->id,
-                        'image_path' => $localGallery,
+                        'image_path' => $galleryUrl,
                     ]);
                 }
             }
