@@ -43,9 +43,20 @@ class DashboardController extends Controller
         }
 
         // Approval Specific Stats
-        $pendingDosenCount = Project::where('status', Project::STATUS_PENDING)->count();
-        $verifiedDosenCount = Project::where('status', Project::STATUS_VERIFIED_DOSEN)->count();
-        $approvedCount = Project::where('status', Project::STATUS_APPROVED)->count();
+        $pendingDosenCount = Project::where('status', Project::STATUS_PENDING)
+            ->when($user->isDosen(), function ($q) use ($user) {
+                $q->where('dosen_pembimbing_id', $user->id);
+            })->count();
+
+        $verifiedDosenCount = Project::where('status', Project::STATUS_VERIFIED_DOSEN)
+            ->when($user->isDosen(), function ($q) use ($user) {
+                $q->where('dosen_pembimbing_id', $user->id);
+            })->count();
+
+        $approvedCount = Project::where('status', Project::STATUS_APPROVED)
+            ->when($user->isDosen(), function ($q) use ($user) {
+                $q->where('dosen_pembimbing_id', $user->id);
+            })->count();
 
         // Stats for graphs
         $projectsPerYear = Project::selectRaw('school_year, COUNT(*) as total')
