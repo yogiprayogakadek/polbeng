@@ -42,8 +42,7 @@ class ProjectController extends Controller
             return DataTables::eloquent($projects)
                 ->addIndexColumn()
                 ->addColumn('thumbnail', function ($project) {
-                    // return '<img src="' . resolveAssetPath($project->thumbnail) . '" width="70" class="img-thumbnail">';
-                    return '<img src="' . asset('storage/' . $project->thumbnail) . '" width="70" class="img-thumbnail">';
+                    return '<img src="' . resolveAssetPath($project->thumbnail) . '" width="70" class="img-thumbnail">';
                 })
                 ->addColumn('category_name', function ($project) {
                     $programName = $project->projectCategory?->studyProgram?->study_program_name ?? 'N/A';

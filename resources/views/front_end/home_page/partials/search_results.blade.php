@@ -4,7 +4,7 @@
             <a href="{{ route('frontend.project.detail', ['slug' => Str::slug($project->project_title), 'uuid' => $project->uuid]) }}"
                 class="list-group-item list-group-item-action search-result-item py-3 px-4 d-flex align-items-center gap-3">
                 <div class="flex-shrink-0 shadow-sm border" style="width: 64px; height: 48px; overflow: hidden; border-radius: 8px;">
-                    <img src="{{ $project->thumbnail ? asset('storage/' . $project->thumbnail) : asset('assets/images/logo/main-logo.png') }}"
+                    <img src="{{ resolveAssetPath($project->thumbnail ?: 'assets/images/logo/main-logo.png') }}"
                         class="w-100 h-100 object-fit-cover" alt="{{ $project->project_title }}">
                 </div>
                 <div class="flex-grow-1 min-width-0">

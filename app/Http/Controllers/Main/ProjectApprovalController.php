@@ -63,6 +63,13 @@ class ProjectApprovalController extends Controller
                 })
                 ->addColumn('action', function ($project) {
                     $btn = '<div class="d-flex gap-2">';
+                    $btn .= '<button class="btn btn-outline-primary modal-btn"
+                                data-url="' . route('project.detail', $project->id) . '"
+                                data-modal-id="projectDetailModal" data-bs-toggle="tooltip"
+                                data-bs-custom-class="custom-tooltip" data-bs-placement="top"
+                                data-bs-title="Project Detail">
+                                <iconify-icon icon="solar:eye-line-duotone"></iconify-icon>
+                            </button>';
                     if ($project->status === Project::STATUS_PENDING) {
                         $btn .= '<button class="btn btn-primary d-flex align-items-center btn-verify" data-id="' . $project->id . '" data-title="' . $project->project_title . '">
                                     <iconify-icon icon="solar:shield-check-bold" class="me-1"></iconify-icon> Process
@@ -157,6 +164,13 @@ class ProjectApprovalController extends Controller
                 })
                 ->addColumn('action', function ($project) {
                     $btn = '<div class="d-flex gap-2">';
+                    $btn .= '<button class="btn btn-outline-primary modal-btn"
+                                data-url="' . route('project.detail', $project->id) . '"
+                                data-modal-id="projectDetailModal" data-bs-toggle="tooltip"
+                                data-bs-custom-class="custom-tooltip" data-bs-placement="top"
+                                data-bs-title="Project Detail">
+                                <iconify-icon icon="solar:eye-line-duotone"></iconify-icon>
+                            </button>';
                     if ($project->status === Project::STATUS_VERIFIED_DOSEN) {
                         $btn .= '<button class="btn btn-success d-flex align-items-center btn-approve" data-id="' . $project->id . '" data-title="' . $project->project_title . '">
                                     <iconify-icon icon="solar:check-read-bold" class="me-1"></iconify-icon> Approve

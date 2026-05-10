@@ -315,7 +315,7 @@
                         <div class="card shadow-sm rounded-3 text-center">
                             <div class="card-body">
                                 <h5 class="fw-semibold mb-2"><i class="ti ti-photo me-2"></i> Project Thumbnail</h5>
-                                <img src="{{ asset('storage/' . $project->thumbnail) }}"
+                                <img src="{{ resolveAssetPath($project->thumbnail) }}"
                                     class="img-fluid rounded lightbox-trigger" style="max-height: 300px;">
                             </div>
                         </div>
@@ -326,7 +326,7 @@
                         <div class="card shadow-sm rounded-3">
                             <div class="card-body text-center">
                                 <h5 class="fw-semibold mb-2"><i class="ti ti-photo-plus me-2"></i> Poster</h5>
-                                <img src="{{ asset('storage/' . $project->detail->poster_path) }}"
+                                <img src="{{ resolveAssetPath($project->detail->poster_path) }}"
                                     class="img-fluid rounded shadow-sm lightbox-trigger" style="max-height: 300px;">
                             </div>
                         </div>

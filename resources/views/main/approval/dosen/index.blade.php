@@ -5,6 +5,12 @@
 @push('css')
     <link rel="stylesheet"
         href="https://bootstrapdemos.adminmart.com/matdash/dist/assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
+    <style>
+        .glightbox-container {
+            z-index: 9999 !important;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -44,6 +50,8 @@
         </div>
     </div>
 
+    <div class="modal-render"></div>
+
     <!-- Process Modal -->
     <div class="modal fade" id="processModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
@@ -81,6 +89,7 @@
 @push('script')
     <script src="https://bootstrapdemos.adminmart.com/matdash/dist/assets/libs/datatables.net/js/jquery.dataTables.min.js">
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
     <script>
         $(document).ready(function() {
             let table = $('#dosenApprovalTable').DataTable({
@@ -156,6 +165,30 @@
                     error: function(xhr) {
                         Swal.fire('Error', xhr.responseJSON.message, 'error');
                     }
+                });
+            });
+            $(document).on('click', '.modal-btn', function() {
+                const $btn = $(this);
+                const url = $btn.data('url');
+                const modalID = $btn.data('modal-id');
+
+                $.get(url, function(response) {
+                    let htmlContent = response.html || response;
+                    $('.modal-render').html(htmlContent);
+
+                    const modalEl = document.getElementById(modalID);
+                    if (modalEl) {
+                        const modalInstance = new bootstrap.Modal(modalEl);
+                        modalInstance.show();
+                    }
+
+                    // Re-init lightbox
+                    GLightbox({
+                        selector: '.glightbox',
+                        touchNavigation: true,
+                        loop: true,
+                        zoomable: true
+                    });
                 });
             });
         });

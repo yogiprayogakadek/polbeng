@@ -163,12 +163,7 @@
     {{-- HERO SECTION --}}
     <section class="hero-section">
         @php
-            $heroThumbnail = $project->thumbnail;
-            if ($heroThumbnail && !Str::startsWith($heroThumbnail, ['http://', 'https://'])) {
-                $heroThumbnail = asset('storage/' . $heroThumbnail);
-            } elseif (!$heroThumbnail) {
-                $heroThumbnail = asset('assets/images/logo/main-logo.png');
-            }
+            $heroThumbnail = resolveAssetPath($project->thumbnail ?: 'assets/images/logo/main-logo.png');
         @endphp
         <div class="hero-bg-blur"
             style="background-image: url('{{ $heroThumbnail }}');">
@@ -308,10 +303,7 @@
                                     <h2 class="section-title fs-4 fw-bold text-dark mb-4">Project Poster</h2>
                                     @if($project->detail->poster_path)
                                     @php
-                                        $posterPath = $project->detail->poster_path;
-                                        if ($posterPath && !Str::startsWith($posterPath, ['http://', 'https://'])) {
-                                            $posterPath = asset('storage/' . $posterPath);
-                                        }
+                                        $posterPath = resolveAssetPath($project->detail->poster_path);
                                     @endphp
                                     <div class="poster-container mb-3">
                                         <a href="{{ $posterPath }}" class="glightbox" data-gallery="project-poster">
@@ -353,10 +345,7 @@
             <div class="row g-4 justify-content-center">
                 @foreach ($project->detail->galleries as $gallery)
                     @php
-                        $galleryPath = $gallery->image_path;
-                        if ($galleryPath && !Str::startsWith($galleryPath, ['http://', 'https://'])) {
-                            $galleryPath = asset('storage/' . $galleryPath);
-                        }
+                        $galleryPath = resolveAssetPath($gallery->image_path);
                     @endphp
                     <div class="col-6 col-md-4 col-lg-3">
                         <a href="{{ $galleryPath }}" 

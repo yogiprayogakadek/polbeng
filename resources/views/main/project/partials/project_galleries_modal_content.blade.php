@@ -7,16 +7,16 @@
                 </h6>
                 <div class="mb-2 gallery-image-container"
                     style="width: 100%; height: 180px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #f8f9fa; border-radius: 8px;">
-                    <a href="{{ asset('storage/' . $gallery->image_path) }}" class="glightbox"
+                    <a href="{{ resolveAssetPath($gallery->image_path) }}" class="glightbox"
                         data-gallery="projectGallery" data-title="Image {{ $index + 1 }}">
-                        <img src="{{ asset('storage/' . $gallery->image_path) }}"
+                        <img src="{{ resolveAssetPath($gallery->image_path) }}"
                             class="img-fluid rounded-3 hover-scale"
                             style="max-height: 100%; max-width: 100%; object-fit: cover;">
                     </a>
                 </div>
 
                 <div class="d-flex justify-content-between w-100">
-                    <a href="{{ asset('storage/' . $gallery->image_path) }}" download
+                    <a href="{{ resolveAssetPath($gallery->image_path) }}" download
                         class="btn btn-sm btn-light rounded-pill shadow-sm" data-bs-toggle="tooltip" title="Download">
                         <i class="ti ti-download"></i>
                     </a>
