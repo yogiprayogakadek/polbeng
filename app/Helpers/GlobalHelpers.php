@@ -81,8 +81,15 @@ if (!function_exists('resolveAssetPath')) {
             return $path;
         }
 
-        // Handle local storage path
-        return asset('storage/' . ltrim($path, '/'));
+        // Handle local storage vs public assets
+        $cleanPath = ltrim($path, '/');
+        
+        // If it starts with assets/ but NOT assets/images/projects/, it's likely a static asset in the public folder
+        if (str_starts_with($cleanPath, 'assets/') && !str_starts_with($cleanPath, 'assets/images/projects/')) {
+            return asset($cleanPath);
+        }
+
+        return asset('storage/' . $cleanPath);
     }
 }
 

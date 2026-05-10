@@ -209,13 +209,9 @@
         ];
         $photoId = $categoryImages[$projectCategory->project_category_name] ?? '1451187580459-43490279c0fa';
         $thumbnail = $projectCategory->thumbnail;
-        if ($thumbnail && !Str::startsWith($thumbnail, ['http://', 'https://'])) {
-            $heroImage = asset('storage/' . $thumbnail);
-        } elseif ($thumbnail) {
-            $heroImage = $thumbnail;
-        } else {
-            $heroImage = "https://images.unsplash.com/photo-{$photoId}?auto=format&fit=crop&w=1200&q=80";
-        }
+        
+        // Use resolveAssetPath for everything, providing the Unsplash URL as fallback if thumbnail is empty
+        $heroImage = resolveAssetPath($thumbnail ?: "https://images.unsplash.com/photo-{$photoId}?auto=format&fit=crop&w=1200&q=80");
     @endphp
 
     <section class="hero-section">

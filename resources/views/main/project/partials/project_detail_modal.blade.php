@@ -29,7 +29,7 @@
                         <div class="card shadow-sm rounded-3 text-center">
                             <div class="card-body">
                                 <h5 class="fw-semibold mb-2"><i class="ti ti-photo me-2"></i> Project Thumbnail</h5>
-                                <img src="{{ asset('storage/' . $project->thumbnail) }}" class="img-fluid rounded"
+                                <img src="{{ resolveAssetPath($project->thumbnail) }}" class="img-fluid rounded"
                                     style="max-height: 200px;">
                             </div>
                         </div>
@@ -39,7 +39,7 @@
                         <div class="card shadow-sm rounded-3 text-center">
                             <div class="card-body">
                                 <h5 class="fw-semibold mb-2"><i class="ti ti-image me-2"></i> Project Poster</h5>
-                                <img src="{{ asset('storage/' . $project->detail->poster_path) }}"
+                                <img src="{{ resolveAssetPath($project->detail->poster_path) }}"
                                     class="img-fluid rounded" style="max-height: 200px;">
                             </div>
                         </div>

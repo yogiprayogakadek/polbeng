@@ -108,7 +108,7 @@
                         <div class="card-body px-4 px-lg-5 py-4 text-start">
                             <h2 class="fs-6 fw-bold text-dark lh-base mb-3">Poster</h2>
                             <div class="border-top pt-4 mt-3">
-                                <img src="{{ asset('storage/' . $project->detail->poster_path) }}" width="100%"
+                                <img src="{{ resolveAssetPath($project->detail->poster_path) }}" width="100%"
                                     class="rounded shadow-sm" alt="Project Poster">
                             </div>
                         </div>
@@ -124,10 +124,10 @@
                                     <div class="row g-3">
                                         @foreach ($chunk as $gallery)
                                             <div class="col-12 col-md-6">
-                                                <a href="{{ asset('storage/' . $gallery->image_path) }}"
+                                                <a href="{{ resolveAssetPath($gallery->image_path) }}"
                                                     class="glightbox d-block" data-gallery="project-gallery"
                                                     data-title="{{ $project->project_title }}">
-                                                    <img src="{{ asset('storage/' . $gallery->image_path) }}"
+                                                    <img src="{{ resolveAssetPath($gallery->image_path) }}"
                                                         class="rounded shadow-sm w-100"
                                                         style="height: 200px; object-fit: cover;" alt="Gallery Image">
                                                 </a>

@@ -74,7 +74,7 @@
                             <label for="thumbnail" class="form-label">Thumbnail Image</label>
                             @if ($projectCategory->thumbnail)
                                 <div class="mb-2">
-                                    <img src="{{ asset('storage/' . $projectCategory->thumbnail) }}" alt="Thumbnail"
+                                    <img src="{{ resolveAssetPath($projectCategory->thumbnail) }}" alt="Thumbnail"
                                         class="img-thumbnail" style="max-height: 150px;">
                                 </div>
                             @endif

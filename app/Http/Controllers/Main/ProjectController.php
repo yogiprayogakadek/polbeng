@@ -184,7 +184,7 @@ class ProjectController extends Controller
             if ($request->hasFile('thumbnail')) {
                 $file = $request->file('thumbnail');
                 $filename = time() . '_' . $file->getClientOriginalName();
-                $file->storeAs('public/assets/images/projects/thumbnails', $filename);
+                $file->storeAs('assets/images/projects/thumbnails', $filename, 'public');
 
                 $projectData['thumbnail'] = 'assets/images/projects/thumbnails/' . $filename;
             }
@@ -231,7 +231,7 @@ class ProjectController extends Controller
             if ($request->hasFile('poster_path')) {
                 $file = $request->file('poster_path');
                 $filename = time() . '_' . $file->getClientOriginalName();
-                $file->storeAs('public/assets/images/projects/posters', $filename);
+                $file->storeAs('assets/images/projects/posters', $filename, 'public');
 
                 $projectDetailData['poster_path'] = 'assets/images/projects/posters/' . $filename;
             }
@@ -248,7 +248,7 @@ class ProjectController extends Controller
             if ($request->hasFile('galleries')) {
                 foreach ($request->file('galleries') as $file) {
                     $filename = time() . '_' . uniqid() . '_' . $file->getClientOriginalName();
-                    $file->storeAs('public/assets/images/projects/galleries', $filename);
+                    $file->storeAs('assets/images/projects/galleries', $filename, 'public');
 
                     $projectGallery = ProjectGallery::create([
                         'project_detail_id' => $projectDetail->id,
@@ -362,7 +362,7 @@ class ProjectController extends Controller
         if ($request->hasFile('galleries')) {
             foreach ($request->file('galleries') as $file) {
                 $filename = time() . '_' . uniqid() . '_' . $file->getClientOriginalName();
-                $file->storeAs('public/assets/images/projects/galleries', $filename);
+                $file->storeAs('assets/images/projects/galleries', $filename, 'public');
 
                 $projectGallery = ProjectGallery::create([
                     'project_detail_id' => $request->projectDetailID,
@@ -409,13 +409,13 @@ class ProjectController extends Controller
 
             // Handle Thumbnail (delete the old one if there is one and upload a new one)
             if ($request->hasFile('thumbnail')) {
-                if ($project->thumbnail && Storage::disk('public')->exists(str_replace('assets/', '', $project->thumbnail))) {
-                    Storage::disk('public')->delete(str_replace('assets/', '', $project->thumbnail));
+                if ($project->thumbnail && Storage::disk('public')->exists($project->thumbnail)) {
+                    Storage::disk('public')->delete($project->thumbnail);
                 }
 
                 $file = $request->file('thumbnail');
                 $filename = time() . '_' . $file->getClientOriginalName();
-                $file->storeAs('public/assets/images/projects/thumbnails', $filename);
+                $file->storeAs('assets/images/projects/thumbnails', $filename, 'public');
 
                 $project->thumbnail = 'assets/images/projects/thumbnails/' . $filename;
             }
@@ -448,13 +448,13 @@ class ProjectController extends Controller
 
             // Poster Handle (delete the old one if any and upload the new one)
             if ($request->hasFile('poster_path')) {
-                if ($projectDetail->poster_path && Storage::disk('public')->exists(str_replace('assets/', '', $projectDetail->poster_path))) {
-                    Storage::disk('public')->delete(str_replace('assets/', '', $projectDetail->poster_path));
+                if ($projectDetail->poster_path && Storage::disk('public')->exists($projectDetail->poster_path)) {
+                    Storage::disk('public')->delete($projectDetail->poster_path);
                 }
 
                 $file = $request->file('poster_path');
                 $filename = time() . '_' . $file->getClientOriginalName();
-                $file->storeAs('public/assets/images/projects/posters', $filename);
+                $file->storeAs('assets/images/projects/posters', $filename, 'public');
 
                 $projectDetail->poster_path = 'assets/images/projects/posters/' . $filename;
             }
