@@ -338,8 +338,9 @@ class ProjectController extends Controller
 
         try {
             // Hapus file jika ada
-            if (Storage::disk('public')->exists($gallery->image_path)) {
-                Storage::disk('public')->delete($gallery->image_path);
+            $filePath = public_path($gallery->image_path);
+            if ($gallery->image_path && File::exists($filePath)) {
+                File::delete($filePath);
             }
 
             $gallery->delete();
@@ -371,25 +372,44 @@ class ProjectController extends Controller
     // Update/Add Gallery
     public function storeGalleryPhotos(GalleryUpdateRequest $request)
     {
-        // INITIATE GALLERIES
-        if ($request->hasFile('galleries')) {
-            foreach ($request->file('galleries') as $file) {
-                $filename = time() . '_' . uniqid() . '_' . $file->getClientOriginalName();
-                $path = public_path('assets/images/projects/galleries');
-                if (!File::exists($path)) {
-                    File::makeDirectory($path, 0755, true);
-                }
-                $file->move($path, $filename);
+        DB::beginTransaction();
+        try {
+            // INITIATE GALLERIES
+            if ($request->hasFile('galleries')) {
+                foreach ($request->file('galleries') as $file) {
+                    $filename = time() . '_' . uniqid() . '_' . $file->getClientOriginalName();
+                    $path = public_path('assets/images/projects/galleries');
+                    if (!File::exists($path)) {
+                        File::makeDirectory($path, 0755, true);
+                    }
+                    $file->move($path, $filename);
 
-                $projectGallery = ProjectGallery::create([
-                    'project_detail_id' => $request->projectDetailID,
-                    'image_path' => 'assets/images/projects/galleries/' . $filename,
-                ]);
-                if (!$projectGallery) {
-                    DB::rollBack();
-                    return back()->withInput()->with('error', 'Failed while saving data.');
+                    $projectGallery = ProjectGallery::create([
+                        'project_detail_id' => $request->projectDetailID,
+                        'image_path' => 'assets/images/projects/galleries/' . $filename,
+                    ]);
+                    
+                    if (!$projectGallery) {
+                        DB::rollBack();
+                        return response()->json([
+                            'status' => 500,
+                            'message' => 'Failed while saving data.'
+                        ], 500);
+                    }
                 }
             }
+
+            DB::commit();
+            return response()->json([
+                'status' => 200,
+                'message' => 'Photos uploaded successfully.'
+            ]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 500,
+                'message' => 'Error: ' . $th->getMessage()
+            ], 500);
         }
     }
 

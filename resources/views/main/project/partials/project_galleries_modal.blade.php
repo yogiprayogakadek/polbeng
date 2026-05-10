@@ -56,7 +56,7 @@
         const projectDetailId = $('#projectGalleriesModal').data('project-detail-id');
 
         function loadGalleries(projectDetailId) {
-            $.get(`/admin/project/galleries/${projectDetailId}`, function(response) {
+            $.get(`/project/galleries/${projectDetailId}`, function(response) {
                 $('#projectGalleriesContent').html(response.html);
                 // Re-init GLightbox
                 GLightbox({
