@@ -84,6 +84,12 @@ class ProjectUpdateRequest extends FormRequest
             'student_id_number.required' => 'At least one member is required.',
             'student_id_number.*.numeric' => 'Student ID must be numeric.',
             'student_id_number.*.digits_between' => 'Student ID must be between 5 and 20 digits.',
+            'thumbnail.image' => 'Thumbnail must be an image file.',
+            'thumbnail.mimes' => 'Thumbnail must be a file of type: jpeg, png, jpg.',
+            'thumbnail.max' => 'Thumbnail size must not exceed 2MB.',
+            'poster_path.image' => 'Poster must be an image file.',
+            'poster_path.mimes' => 'Poster must be a file of type: jpeg, png, jpg.',
+            'poster_path.max' => 'Poster size must not exceed 2MB.',
         ];
     }
 }

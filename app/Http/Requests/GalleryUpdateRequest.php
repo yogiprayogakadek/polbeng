@@ -23,27 +23,16 @@ class GalleryUpdateRequest extends FormRequest
     {
         return [
             'galleries' => 'nullable|array',
+            'galleries.*' => 'image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
 
-    public function withValidator($validator)
+    public function messages(): array
     {
-        $validator->after(function ($validator) {
-            $galleries = $this->file('galleries', []);
-
-            // Validate galleries files manually:
-            if (is_array($galleries)) {
-                foreach ($galleries as $index => $file) {
-                    if ($file && $file->isValid()) {
-                        if (!in_array($file->extension(), ['jpeg', 'jpg', 'png'])) {
-                            $validator->errors()->add("galleries.$index", "Gallery file at position " . ($index + 1) . " must be a JPEG or PNG image.");
-                        }
-                        if ($file->getSize() > 2 * 1024 * 1024) {
-                            $validator->errors()->add("galleries.$index", "Gallery file at position " . ($index + 1) . " must not exceed 2MB.");
-                        }
-                    }
-                }
-            }
-        });
+        return [
+            'galleries.*.image' => 'Gallery file must be an image.',
+            'galleries.*.mimes' => 'Gallery file must be a type of: jpeg, png, jpg.',
+            'galleries.*.max' => 'Gallery file size must not exceed 2MB.',
+        ];
     }
 }

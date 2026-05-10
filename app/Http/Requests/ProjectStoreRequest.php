@@ -25,8 +25,7 @@ class ProjectStoreRequest extends FormRequest
             'presentation_video_url' => 'required|url',
             'description' => 'required|string',
             'galleries' => 'nullable|array',
-            // 'galleries.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            // 'galleries.*' => 'sometimes|image|mimes:jpeg,png,jpg|max:2048',
+            'galleries.*' => 'image|mimes:jpeg,png,jpg|max:2048',
 
             // Project Members
             'student_name' => 'required|array|min:1',
@@ -104,20 +103,6 @@ class ProjectStoreRequest extends FormRequest
             if ($filledCount < 1) {
                 $validator->errors()->add('student_name', 'At least one complete Project Member must be filled.');
             }
-
-            // Validate galleries files manually:
-            if (is_array($galleries)) {
-                foreach ($galleries as $index => $file) {
-                    if ($file && $file->isValid()) {
-                        if (!in_array($file->extension(), ['jpeg', 'jpg', 'png'])) {
-                            $validator->errors()->add("galleries.$index", "Gallery file at position " . ($index + 1) . " must be a JPEG or PNG image.");
-                        }
-                        if ($file->getSize() > 2 * 1024 * 1024) {
-                            $validator->errors()->add("galleries.$index", "Gallery file at position " . ($index + 1) . " must not exceed 2MB.");
-                        }
-                    }
-                }
-            }
         });
     }
 
@@ -137,6 +122,15 @@ class ProjectStoreRequest extends FormRequest
             'student_id_number.required' => 'At least one member is required.',
             'student_id_number.*.numeric' => 'Student ID must be numeric.',
             'student_id_number.*.digits_between' => 'Student ID must be between 5 and 20 digits.',
+            'thumbnail.image' => 'Thumbnail must be an image file.',
+            'thumbnail.mimes' => 'Thumbnail must be a file of type: jpeg, png, jpg.',
+            'thumbnail.max' => 'Thumbnail size must not exceed 2MB.',
+            'poster_path.image' => 'Poster must be an image file.',
+            'poster_path.mimes' => 'Poster must be a file of type: jpeg, png, jpg.',
+            'poster_path.max' => 'Poster size must not exceed 2MB.',
+            'galleries.*.image' => 'Gallery file must be an image.',
+            'galleries.*.mimes' => 'Gallery file must be a type of: jpeg, png, jpg.',
+            'galleries.*.max' => 'Gallery file size must not exceed 2MB.',
         ];
     }
 }
