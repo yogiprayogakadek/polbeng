@@ -84,8 +84,8 @@ if (!function_exists('resolveAssetPath')) {
         // Handle local storage vs public assets
         $cleanPath = ltrim($path, '/');
         
-        // If it starts with assets/ but NOT assets/images/projects/, it's likely a static asset in the public folder
-        if (str_starts_with($cleanPath, 'assets/') && !str_starts_with($cleanPath, 'assets/images/projects/')) {
+        // If it starts with assets/, it's in the public folder (either static or direct upload)
+        if (str_starts_with($cleanPath, 'assets/')) {
             return asset($cleanPath);
         }
 

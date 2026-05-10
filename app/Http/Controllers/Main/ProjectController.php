@@ -13,6 +13,7 @@ use App\Models\ProjectGallery;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -184,7 +185,11 @@ class ProjectController extends Controller
             if ($request->hasFile('thumbnail')) {
                 $file = $request->file('thumbnail');
                 $filename = time() . '_' . $file->getClientOriginalName();
-                $file->storeAs('assets/images/projects/thumbnails', $filename, 'public');
+                $path = public_path('assets/images/projects/thumbnails');
+                if (!File::exists($path)) {
+                    File::makeDirectory($path, 0755, true);
+                }
+                $file->move($path, $filename);
 
                 $projectData['thumbnail'] = 'assets/images/projects/thumbnails/' . $filename;
             }
@@ -231,7 +236,11 @@ class ProjectController extends Controller
             if ($request->hasFile('poster_path')) {
                 $file = $request->file('poster_path');
                 $filename = time() . '_' . $file->getClientOriginalName();
-                $file->storeAs('assets/images/projects/posters', $filename, 'public');
+                $path = public_path('assets/images/projects/posters');
+                if (!File::exists($path)) {
+                    File::makeDirectory($path, 0755, true);
+                }
+                $file->move($path, $filename);
 
                 $projectDetailData['poster_path'] = 'assets/images/projects/posters/' . $filename;
             }
@@ -248,7 +257,11 @@ class ProjectController extends Controller
             if ($request->hasFile('galleries')) {
                 foreach ($request->file('galleries') as $file) {
                     $filename = time() . '_' . uniqid() . '_' . $file->getClientOriginalName();
-                    $file->storeAs('assets/images/projects/galleries', $filename, 'public');
+                    $path = public_path('assets/images/projects/galleries');
+                    if (!File::exists($path)) {
+                        File::makeDirectory($path, 0755, true);
+                    }
+                    $file->move($path, $filename);
 
                     $projectGallery = ProjectGallery::create([
                         'project_detail_id' => $projectDetail->id,
@@ -362,7 +375,11 @@ class ProjectController extends Controller
         if ($request->hasFile('galleries')) {
             foreach ($request->file('galleries') as $file) {
                 $filename = time() . '_' . uniqid() . '_' . $file->getClientOriginalName();
-                $file->storeAs('assets/images/projects/galleries', $filename, 'public');
+                $path = public_path('assets/images/projects/galleries');
+                if (!File::exists($path)) {
+                    File::makeDirectory($path, 0755, true);
+                }
+                $file->move($path, $filename);
 
                 $projectGallery = ProjectGallery::create([
                     'project_detail_id' => $request->projectDetailID,
@@ -409,13 +426,19 @@ class ProjectController extends Controller
 
             // Handle Thumbnail (delete the old one if there is one and upload a new one)
             if ($request->hasFile('thumbnail')) {
-                if ($project->thumbnail && Storage::disk('public')->exists($project->thumbnail)) {
-                    Storage::disk('public')->delete($project->thumbnail);
+                // Delete old thumbnail if it exists in public
+                $oldPath = public_path($project->thumbnail);
+                if ($project->thumbnail && File::exists($oldPath)) {
+                    File::delete($oldPath);
                 }
 
                 $file = $request->file('thumbnail');
                 $filename = time() . '_' . $file->getClientOriginalName();
-                $file->storeAs('assets/images/projects/thumbnails', $filename, 'public');
+                $path = public_path('assets/images/projects/thumbnails');
+                if (!File::exists($path)) {
+                    File::makeDirectory($path, 0755, true);
+                }
+                $file->move($path, $filename);
 
                 $project->thumbnail = 'assets/images/projects/thumbnails/' . $filename;
             }
@@ -448,13 +471,19 @@ class ProjectController extends Controller
 
             // Poster Handle (delete the old one if any and upload the new one)
             if ($request->hasFile('poster_path')) {
-                if ($projectDetail->poster_path && Storage::disk('public')->exists($projectDetail->poster_path)) {
-                    Storage::disk('public')->delete($projectDetail->poster_path);
+                // Delete old poster if it exists in public
+                $oldPath = public_path($projectDetail->poster_path);
+                if ($projectDetail->poster_path && File::exists($oldPath)) {
+                    File::delete($oldPath);
                 }
 
                 $file = $request->file('poster_path');
                 $filename = time() . '_' . $file->getClientOriginalName();
-                $file->storeAs('assets/images/projects/posters', $filename, 'public');
+                $path = public_path('assets/images/projects/posters');
+                if (!File::exists($path)) {
+                    File::makeDirectory($path, 0755, true);
+                }
+                $file->move($path, $filename);
 
                 $projectDetail->poster_path = 'assets/images/projects/posters/' . $filename;
             }
