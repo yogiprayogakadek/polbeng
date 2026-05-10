@@ -90,7 +90,7 @@
                     <!-- --------------------------------------------------------------------------------------------------------- -->
 
                     @if(auth()->user()->isAdmin() || auth()->user()->isPetugas() || auth()->user()->isDosen() || auth()->user()->isKaprodi())
-                    <li class="mini-nav-item single-menu" id="dashboard">
+                    <li class="mini-nav-item single-menu {{ Request::is('dashboard*') ? 'selected' : '' }}" id="dashboard">
                         <a href="{{ route('dashboard.admin') }}" data-bs-toggle="tooltip"
                             data-bs-custom-class="custom-tooltip" data-bs-placement="right" data-bs-title="Dashboard">
                             <iconify-icon icon="solar:home-line-duotone" class="fs-7"></iconify-icon>
@@ -140,8 +140,8 @@
                     @endif
 
                     @if(auth()->user()->isDosen())
-                    <li class="mini-nav-item" id="mini-6">
-                        <a href="javascript:void(0)" data-bs-toggle="tooltip"
+                    <li class="mini-nav-item single-menu {{ Request::is('dosen*') ? 'selected' : '' }}" id="mini-6">
+                        <a href="{{ route('dosen.index') }}" data-bs-toggle="tooltip"
                             data-bs-custom-class="custom-tooltip" data-bs-placement="right" data-bs-title="Project Validation">
                             <iconify-icon icon="solar:shield-check-bold" class="fs-7"></iconify-icon>
                         </a>
@@ -149,8 +149,8 @@
                     @endif
 
                     @if(auth()->user()->isKaprodi())
-                    <li class="mini-nav-item" id="mini-6">
-                        <a href="javascript:void(0)" data-bs-toggle="tooltip"
+                    <li class="mini-nav-item single-menu {{ Request::is('kaprodi*') ? 'selected' : '' }}" id="mini-7">
+                        <a href="{{ route('kaprodi.index') }}" data-bs-toggle="tooltip"
                             data-bs-custom-class="custom-tooltip" data-bs-placement="right" data-bs-title="Project Approval">
                             <iconify-icon icon="solar:check-read-bold" class="fs-7"></iconify-icon>
                         </a>
@@ -385,43 +385,7 @@
                 </nav>
                 @endif
 
-                @if(auth()->user()->isDosen())
-                <!-- ---------------------------------- -->
-                <!-- Project Validation (Dosen) -->
-                <!-- ---------------------------------- -->
-                <nav class="sidebar-nav" id="menu-right-mini-6" data-simplebar>
-                    <ul class="sidebar-menu" id="sidebarnav">
-                        <li class="nav-small-cap">
-                            <span class="hide-menu">Validation</span>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ route('dosen.index') }}" aria-expanded="false">
-                                <iconify-icon icon="solar:shield-check-bold-duotone"></iconify-icon>
-                                <span class="hide-menu">Project Validation List</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-                @endif
 
-                @if(auth()->user()->isKaprodi())
-                <!-- ---------------------------------- -->
-                <!-- Project Approval (Kaprodi) -->
-                <!-- ---------------------------------- -->
-                <nav class="sidebar-nav" id="menu-right-mini-6" data-simplebar>
-                    <ul class="sidebar-menu" id="sidebarnav">
-                        <li class="nav-small-cap">
-                            <span class="hide-menu">Approval</span>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ route('kaprodi.index') }}" aria-expanded="false">
-                                <iconify-icon icon="solar:check-read-bold-duotone"></iconify-icon>
-                                <span class="hide-menu">Project Approval List</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-                @endif
 
 
             </div>
