@@ -125,6 +125,7 @@ Route::middleware(['auth'])->group(function () {
 Route::name('frontend.')->group(function () {
     Route::controller(HomePageController::class)->group(function () {
         Route::get('/', 'homepage')->name('homepage');
+        Route::get('/redesign', 'homepageRedesign')->name('homepage.redesign');
         Route::get('/global-search', 'globalSearch')->name('global.search');
         Route::get('/homepage/project-category/{departmentID}', 'projectCategory')->name('project.category');
     });

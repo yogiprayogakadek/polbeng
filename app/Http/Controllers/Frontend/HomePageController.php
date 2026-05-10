@@ -28,6 +28,22 @@ class HomePageController extends Controller
         return view('front_end.home_page.index', compact('departments', 'stats'));
     }
 
+    public function homepageRedesign()
+    {
+        $departments = Department::where('is_active', true)
+            ->get();
+
+        // Calculate dynamic stats for the homepage impact section
+        $stats = [
+            'dev' => Project::approved()->whereIn('project_category_id', [1, 2, 10])->count(),
+            'iot' => Project::approved()->whereIn('project_category_id', [3, 11])->count(),
+            'media' => Project::approved()->whereIn('project_category_id', [4, 5, 6, 7, 8, 9, 12, 13, 14, 15])->count(),
+            'total' => Project::approved()->count()
+        ];
+
+        return view('front_end.home_page._index', compact('departments', 'stats'));
+    }
+
     public function projectCategory($departmentID)
     {
         $totalProjects = DB::table('project_categories')
